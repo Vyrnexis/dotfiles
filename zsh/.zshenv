@@ -25,10 +25,15 @@ export GPG_TTY=$(tty)
 export STARSHIP_CONFIG="$ZDOTDIR/starship.toml"
 
 # ------------- Paths ---------
-export PATH="$HOME/go/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/.local/bin/Apps:$PATH"
-export PATH="$HOME/.local/share/grabnim/current/bin:$PATH"
-export PATH="$HOME/.nimble/bin:$PATH"
-export PATH="$HOME/.opencode/bin:$PATH"
+typeset -U PATH path # Ensure no duplicates in PATH
+path=(
+  "$HOME/.local/bin"
+  "$HOME/.local/bin/Apps"
+  "$HOME/.cargo/bin"
+  "$HOME/go/bin"
+  "$HOME/.nimble/bin"
+  "$HOME/.local/share/grabnim/current/bin"
+  "$HOME/.opencode/bin"
+  $path
+)
+export PATH
