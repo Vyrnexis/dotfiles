@@ -10,6 +10,7 @@ It is designed to be highly portable, performant, and clean, meaning it can be e
 - **Zsh** (`zsh`): Fully featured shell setup with intelligent paths, plugins, and fuzzy finding.
   - _Note: Zsh plugins are tracked as Git Submodules for easy syncing._
 - **Kitty** (`kitty`): A beautiful, hardware-accelerated terminal configuration with Dracula theme.
+- **NimLaunch** (`nimlaunch`): Configuration for my own custom launcher project, which you can find at [Vyrnexis/NimLaunch](https://github.com/Vyrnexis/NimLaunch).
 
 ## 🚀 Installation
 
@@ -25,6 +26,7 @@ Ensure you have the following installed on your system:
 - `neovim`
 - `kitty`
 - `starship` (for the shell prompt)
+- `nimlaunch` (optional, custom launcher)
 
 ### 2. Clone the Repository
 
@@ -40,7 +42,7 @@ Navigate into the dotfiles directory and use `stow` to automatically create the 
 
 ```bash
 cd ~/dotfiles
-stow nvim zsh kitty
+stow nvim zsh kitty nimlaunch
 ```
 
 That's it! Restart your terminal and everything will be active.
