@@ -17,10 +17,10 @@ vertical_align = "one-third"      # Only used when center=true; "top", "center",
 display = 0                       # Display index when center=true (0 = primary)
 
 [font]
-fontname = "Dejavu:size=16"       # Font name & size (e.g., "Font Family:size=N")
+fontname = "JetBrainsMono Nerd Font Propo:size=16"       # Font name & size (e.g., "Font Family:size=N")
 
 [input]
-prompt = "> "                     # Prompt prefix shown before your query
+prompt = " "                     # Prompt prefix shown before your query e.g nerd font distro
 cursor = "_"                      # Cursor character displayed after query text
 vim_mode = false                  # true enables Vim-style modes/hjkl navigation
 
@@ -58,10 +58,16 @@ query_mode = "filter"
 
 
 # ==========================
-# Run commands
+# Shortcuts
 # ==========================
-# Use `:r` (or `!`) to execute shell commands directly without a custom shortcut.
-
+# Define custom prefix triggers. Each shortcut supports:
+#   prefix  = letters you trigger with ':' (e.g., ":g"); leading/trailing ':' is optional
+#   label   = text shown before your query in the results list
+#   base    = template containing optional {query} placeholder
+#   mode    = "url" (default), "shell", or "file"
+#   group   = optional group name (e.g. "sys")
+#   run_mode = "terminal" (default) or "spawn" for shell commands
+#   stay_open = true keeps NimLaunch open after running the action
 
 [[shortcuts]]
 prefix = ":g"
@@ -81,10 +87,15 @@ label  = "Search YouTube: "
 base   = "https://www.youtube.com/results?search_query={query}"
 mode   = "url"
 
+# ==========================
+# Run commands
+# ==========================
+# Use `:r` (or `!`) to execute shell commands directly without a custom shortcut.
+
 [[shortcuts]]
 prefix    = ":dev"
 label     = "Open Project: "
-base      = "code ~/Projects/Gits/codeberg/Vyrnexis/{query}"
+base      = "xdg-open ~/Projects/Gits/codeberg/Vyrnexis/{query}"
 mode      = "shell"
 run_mode  = "spawn"
 stay_open = false
@@ -97,6 +108,17 @@ mode      = "shell"
 run_mode  = "terminal"
 stay_open = false
 
+[[shortcuts]]
+prefix    = ":dots"
+label     = "Open dotfiles: "
+base      = "xdg-open ~/dotfiles/{query}/.config/{query}" #using stow for dotfiles
+mode      = "shell"
+run_mode  = "spawn"
+stay_open = false
+
+# =======================
+# ai group shortcuts
+# =======================
 [[shortcuts]]
 group = "ai"
 label = "ChatGPT: "
@@ -115,6 +137,9 @@ label = "Claude: "
 base  = "https://claude.ai/new?q={query}"
 mode  = "url"
 
+# =======================
+# sys group shortcuts
+# =======================
 [[shortcuts]]
 group     = "sys"
 label     = "Lock"
@@ -155,13 +180,9 @@ mode      = "shell"
 run_mode  = "spawn"
 stay_open = false
 
-[[shortcuts]]
-group    = "media"
-label    = "Audio Sink"
-base     = "~/.local/bin/audio-sink-picker.sh"
-mode     = "shell"
-run_mode = "spawn"
-
+# =======================
+# cheats group shortcuts
+# =======================
 [[shortcuts]]
 group    = "cheats"
 label    = "Cheatsheet: Kitty"
@@ -185,6 +206,18 @@ base     = "~/.local/bin/nvim-cheatsheet.sh"
 mode     = "shell"
 run_mode = "terminal"
 stay_open = false
+
+
+# ================================================
+# media group shortcuts using scripts + dmenu mode
+# ================================================
+[[shortcuts]]
+group    = "media"
+label    = "Audio Sink"
+base     = "~/.local/bin/audio-sink-picker.sh"
+mode     = "shell"
+run_mode = "spawn"
+
 
 # ==========================
 # Themes
@@ -1230,4 +1263,4 @@ matchFgColorHex     = "#ff6a38"
 
 
 [theme]
-last_chosen = "Frontier"
+last_chosen = "Dracula"
