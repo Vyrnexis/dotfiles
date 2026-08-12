@@ -28,7 +28,16 @@ Ensure you have the following installed on your system:
 - `starship` (for the shell prompt)
 - `nimlaunch` (optional, custom launcher)
 
-### 2. Clone the Repository
+### 2. Configure Zsh Directory
+
+To keep the home directory clean, this configuration routes Zsh to `~/.config/zsh`. You must globally tell Zsh where to look by adding this to your system config:
+
+```bash
+echo 'export ZDOTDIR="$HOME/.config/zsh"' | sudo tee -a /etc/zsh/zshenv
+```
+*(Note: On some distributions like Arch Linux, the file is located at `/etc/zshenv`)*
+
+### 3. Clone the Repository
 
 Because the Zsh plugins are managed via Git Submodules, you **must** use the `--recurse-submodules` flag when cloning so that they are downloaded automatically:
 
@@ -36,7 +45,7 @@ Because the Zsh plugins are managed via Git Submodules, you **must** use the `--
 git clone --recurse-submodules https://github.com/Vyrnexis/dotfiles.git ~/dotfiles
 ```
 
-### 3. Stow the Configs
+### 4. Stow the Configs
 
 Navigate into the dotfiles directory and use `stow` to automatically create the symlinks in your home directory:
 
@@ -49,6 +58,6 @@ That's it! Restart your terminal and everything will be active.
 
 ## ✨ Highlights & Architecture
 
-- **Portable Zsh Environment:** `ZDOTDIR` is automatically set in `~/.zshenv`, which routes all zsh configurations into `~/.config/zsh`.
+- **Clean Zsh Environment:** All Zsh configurations are elegantly routed into `~/.config/zsh` to keep your home directory completely free of clutter.
 - **Logical PATH Management:** All `PATH` variables are defined as a unique Zsh array in `.zshenv` to prevent duplicate path bloat and guarantee execution availability across both the terminal and graphical apps.
 - **AppImage Ready:** Automatically adds `~/.local/bin/Apps` to your path for instant execution of downloaded AppImages.
