@@ -30,10 +30,18 @@ Ensure you have the following installed on your system:
 
 ### 2. Configure Zsh Directory
 
-To keep the home directory clean, this configuration routes Zsh to `~/.config/zsh`. You must globally tell Zsh where to look by adding this to your system config:
+To keep the home directory clean, this configuration routes Zsh to `~/.config/zsh`. You must globally tell Zsh where to look by adding these intelligent checks to your system config (`/etc/zsh/zshenv`):
 
 ```bash
-echo 'export ZDOTDIR="$HOME/.config/zsh"' | sudo tee -a /etc/zsh/zshenv
+if [[ -z "$XDG_CONFIG_HOME" ]]
+then
+	export XDG_CONFIG_HOME="$HOME/.config"
+fi
+
+if [[ -d "$XDG_CONFIG_HOME/zsh" ]]
+then
+	export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+fi
 ```
 
 ### 3. Clone the Repository
