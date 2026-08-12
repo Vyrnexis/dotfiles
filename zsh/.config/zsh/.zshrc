@@ -47,6 +47,4 @@ source "$ZDOTDIR/prompt.zsh"
 
 nymph
 
-# Custom Paths
-export PATH=/home/vyrnexis/.opencode/bin:$PATH
-export PATH="$HOME/.local/bin/Apps:$PATH"
+
