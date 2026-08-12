@@ -35,7 +35,6 @@ To keep the home directory clean, this configuration routes Zsh to `~/.config/zs
 ```bash
 echo 'export ZDOTDIR="$HOME/.config/zsh"' | sudo tee -a /etc/zsh/zshenv
 ```
-*(Note: On some distributions like Arch Linux, the file is located at `/etc/zshenv`)*
 
 ### 3. Clone the Repository
 
