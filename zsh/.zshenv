@@ -27,7 +27,6 @@ export STARSHIP_CONFIG="$ZDOTDIR/starship.toml"
 # ------------- Paths ---------
 export PATH="$HOME/go/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/.local/bin/Apps:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.local/share/grabnim/current/bin:$PATH"
 export PATH="$HOME/.nimble/bin:$PATH"
