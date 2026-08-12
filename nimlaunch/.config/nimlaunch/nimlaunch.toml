@@ -52,6 +52,10 @@ query_mode = "pass"
 name = "media"
 query_mode = "filter"
 
+[[groups]]
+name = "cheats"
+query_mode = "filter"
+
 
 # ==========================
 # Run commands
@@ -157,6 +161,30 @@ label    = "Audio Sink"
 base     = "~/.local/bin/audio-sink-picker.sh"
 mode     = "shell"
 run_mode = "spawn"
+
+[[shortcuts]]
+group    = "cheats"
+label    = "Cheatsheet: Kitty"
+base     = "~/.local/bin/kitty-cheatsheet.sh"
+mode     = "shell"
+run_mode = "terminal"
+stay_open = false
+
+[[shortcuts]]
+group    = "cheats"
+label    = "Cheatsheet: Helix"
+base     = "~/.local/bin/helix-cheatsheet.sh"
+mode     = "shell"
+run_mode = "terminal"
+stay_open = false
+
+[[shortcuts]]
+group    = "cheats"
+label    = "Cheatsheet: Neovim"
+base     = "~/.local/bin/nvim-cheatsheet.sh"
+mode     = "shell"
+run_mode = "terminal"
+stay_open = false
 
 # ==========================
 # Themes
