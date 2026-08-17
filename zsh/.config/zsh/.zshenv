@@ -7,8 +7,8 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 
 # ----------- Editor -----------
-#export EDITOR="vim"
-#export VISUAL="vim"
+export EDITOR="hx"
+export VISUAL="hx"
 
 # ---------- Pager ----------
 if command -v bat >/dev/null 2>&1; then
