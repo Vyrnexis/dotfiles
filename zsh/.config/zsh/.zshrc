@@ -45,8 +45,6 @@ source "$ZDOTDIR/plugins.zsh"
 # -------- Prompt / Theme -------
 source "$ZDOTDIR/prompt.zsh"
 
-export VISUAL="nvim"
-export EDITOR="nvim"
 
 nymph
 
