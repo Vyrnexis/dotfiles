@@ -5,4 +5,7 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 FUNCNEST=100
 
-eval "$(starship init zsh)"
+if [[ ! -f "$XDG_CACHE_HOME/zsh/starship.zsh" ]]; then
+  starship init zsh > "$XDG_CACHE_HOME/zsh/starship.zsh"
+fi
+source "$XDG_CACHE_HOME/zsh/starship.zsh"

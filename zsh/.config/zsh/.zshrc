@@ -16,11 +16,19 @@ setopt NOBEEP
 setopt NUMERIC_GLOB_SORT
 
 # -------------- Init Zoxide --------
-eval "$(zoxide init zsh)"
+if [[ ! -f "$XDG_CACHE_HOME/zsh/zoxide.zsh" ]]; then
+  zoxide init zsh > "$XDG_CACHE_HOME/zsh/zoxide.zsh"
+fi
+source "$XDG_CACHE_HOME/zsh/zoxide.zsh"
 
 # ------------- Completion --------
 autoload -Uz compinit
-compinit -d "$XDG_CACHE_HOME/zsh/zcomdump"
+# Cache compinit: only run security checks if the dump file is older than 24 hours
+if [[ -n $(find "$XDG_CACHE_HOME/zsh/zcomdump" -mtime +1 2>/dev/null) ]] || [[ ! -f "$XDG_CACHE_HOME/zsh/zcomdump" ]]; then
+  compinit -d "$XDG_CACHE_HOME/zsh/zcomdump"
+else
+  compinit -C -d "$XDG_CACHE_HOME/zsh/zcomdump"
+fi
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
