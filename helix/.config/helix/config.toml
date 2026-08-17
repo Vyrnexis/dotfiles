@@ -19,6 +19,10 @@ default-line-ending = "lf"
 popup-border = "all"
 end-of-line-diagnostics = "hint"
 
+[editor.search]
+smart-case = true
+wrap-around = true
+
 [editor.cursor-shape]
 insert = "bar"
 normal = "block"
