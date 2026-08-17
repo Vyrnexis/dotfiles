@@ -2,7 +2,7 @@
 
 Personal [Kitty](https://sw.kovidgoyal.net/kitty/) terminal configuration, managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
-**Theme:** Dracula · **Font:** GeistMono Nerd Font Mono · **Opacity:** 1.0
+**Theme:** Dracula · **Font:** JetBrainsMono Nerd Font · **Opacity:** 1.0
 
 ## Features
 
@@ -15,7 +15,7 @@ Personal [Kitty](https://sw.kovidgoyal.net/kitty/) terminal configuration, manag
 | Tool/Font | Install | Used for |
 |-----------|---------|----------|
 | `kitty` | Package manager | The terminal emulator |
-| `GeistMono Nerd Font Mono` | [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts) | Displaying text and icons correctly |
+| `JetBrainsMono Nerd Font` | [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts) | Displaying text and icons correctly |
 
 ## Installation
 
