@@ -9,10 +9,7 @@ Personal [Helix](https://helix-editor.com/) editor configuration for **v25.07**,
 ```
 helix/.config/helix/
 ├── config.toml          # Editor settings, theme & keybindings
-├── languages.toml       # Language servers & per-language config
-└── themes/              # Custom Catppuccin theme overrides
-    ├── default/
-    └── no_italics/
+└── languages.toml       # Language servers & per-language config
 ```
 
 ## Prerequisites
@@ -27,7 +24,7 @@ helix/.config/helix/
 | `pasls` | [pascal-language-server](https://github.com/castle-engine/pascal-language-server) | Pascal LSP |
 | `uwu_colors` | `cargo install uwu_colors` | Inline color display LSP |
 | `taplo` | `cargo install taplo-cli` | TOML LSP |
-| `yazi` | Package manager | Terminal file picker |
+| `spf` (superfile) | Package manager | Terminal file picker |
 | `lazygit` | Package manager | Git TUI |
 
 ## Installation
