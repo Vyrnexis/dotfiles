@@ -8,9 +8,9 @@ theme = "catppuccin_mocha"
 line-number = "relative"
 mouse = true
 cursorline = true
-bufferline = "multiple"         # show buffer tabs when >1 buffer open
+bufferline = "multiple"
 auto-save = { focus-lost = true, after-delay.enable = true, after-delay.timeout = 5000 }
-color-modes = true              # tint statusline by mode
+color-modes = true
 true-color = true
 idle-timeout = 250
 completion-trigger-len = 1
@@ -18,6 +18,7 @@ text-width = 100
 default-line-ending = "lf"
 popup-border = "all"
 end-of-line-diagnostics = "hint"
+auto-pairs = true
 
 [editor.search]
 smart-case = true
@@ -55,7 +56,7 @@ snippets = true
 [editor.indent-guides]
 render = true
 character = "│"
-skip-levels = 1
+skip-levels = 0                  # Shows root indentation guides for Nim procs/types
 
 # ── Gutters ───────────────────────────────────────────────────────────
 [editor.gutters]
@@ -81,6 +82,10 @@ newline = "none"
 [keys.normal]
 X = "extend_line_above"
 esc = ["collapse_selection", "keep_primary_selection"]
+
+# Indentation shifting
+">" = "indent"
+"<" = "unindent"
 
 # Vim-style motions
 "%" = "match_brackets"
@@ -110,7 +115,6 @@ C-e = [
 C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
 
 [keys.normal.space]
-# File explorer (25.07)
 e = "file_explorer"
 E = "file_explorer_in_current_buffer_directory"
 
@@ -119,4 +123,5 @@ C-s = ":write"
 
 [keys.select]
 X = "extend_line_above"
-
+">" = "indent"
+"<" = "unindent"

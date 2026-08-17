@@ -66,15 +66,15 @@ args = ["lsp", "stdio"]
 # ── Nim ───────────────────────────────────────────────────────────────
 [[language]]
 name = "nim"
+scope = "source.nim"
+injection-regex = "nim"
+file-types = ["nim", "nims", "nimble"]
+comment-token = "#"
+indent = { tab-width = 2, unit = "  " }
 auto-format = true
+formatter = { command = "nimpretty", args = ["--stdin", "--indent:2"] }
 language-servers = ["nimlangserver", "uwu"]
-
-[language.auto-pairs]
-'(' = ')'
-'[' = ']'
-'"' = '"'
-"'" = "'"
-'{' = '}'
+auto-pairs = { '(' = ')', '[' = ']', '"' = '"', "'" = "'", '{' = '}' }
 
 # ── Go ────────────────────────────────────────────────────────────────
 [[language]]
