@@ -1,0 +1,160 @@
+# Helix 25.07 Language Configuration
+# ~/.config/helix/languages.toml
+
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║  Language Servers                                                    ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+
+# ── Nim ───────────────────────────────────────────────────────────────
+[language-server.nimlangserver]
+command = "nimlangserver"
+
+[language-server.nimlsp]
+command = "nimlsp"
+
+# ── Go ────────────────────────────────────────────────────────────────
+[language-server.gopls]
+command = "gopls"
+
+[language-server.gopls.config]
+hints.assignVariableTypes = true
+hints.compositeLiteralFields = true
+hints.constantValues = true
+hints.functionTypeParameters = true
+hints.parameterNames = true
+hints.rangeVariableTypes = true
+
+# ── Python ────────────────────────────────────────────────────────────
+[language-server.pylsp]
+command = "pylsp"
+
+# ── Rust ──────────────────────────────────────────────────────────────
+# NOTE: rust-analyzer is NOT currently in $PATH.
+# Install with:  rustup component add rust-analyzer
+[language-server.rust-analyzer]
+command = "rust-analyzer"
+
+[language-server.rust-analyzer.config]
+check.command = "clippy"
+
+[language-server.rust-analyzer.config.inlayHints]
+bindingModeHints.enable = false
+closingBraceHints.minLines = 10
+closureReturnTypeHints.enable = "with_block"
+discriminantHints.enable = "fieldless"
+lifetimeElisionHints.enable = "skip_trivial"
+typeHints.hideClosureInitialization = false
+typeHints.hideNamedConstructor = false
+
+# ── Pascal ────────────────────────────────────────────────────────────
+[language-server.pasls]
+command = "pasls"
+
+# ── uwu_colors (inline color display LSP) ────────────────────────────
+[language-server.uwu]
+command = "uwu_colors"
+
+# ── TOML ──────────────────────────────────────────────────────────────
+[language-server.taplo]
+command = "taplo"
+args = ["lsp", "stdio"]
+
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║  Languages                                                           ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+
+# ── Nim ───────────────────────────────────────────────────────────────
+[[language]]
+name = "nim"
+auto-format = true
+language-servers = ["nimlangserver", "uwu"]
+
+[language.auto-pairs]
+'(' = ')'
+'[' = ']'
+'"' = '"'
+"'" = "'"
+'{' = '}'
+
+# ── Go ────────────────────────────────────────────────────────────────
+[[language]]
+name = "go"
+auto-format = true
+language-servers = ["gopls", "uwu"]
+
+[[language]]
+name = "gomod"
+auto-format = true
+language-servers = ["gopls"]
+
+[[language]]
+name = "gowork"
+auto-format = true
+language-servers = ["gopls"]
+
+[[language]]
+name = "gotmpl"
+auto-format = true
+language-servers = ["gopls"]
+
+# ── Python ────────────────────────────────────────────────────────────
+[[language]]
+name = "python"
+auto-format = true
+language-servers = ["pylsp", "uwu"]
+
+# ── Rust ──────────────────────────────────────────────────────────────
+[[language]]
+name = "rust"
+auto-format = true
+language-servers = ["rust-analyzer", "uwu"]
+
+# ── Pascal ────────────────────────────────────────────────────────────
+[[language]]
+name = "pascal"
+scope = "source.pascal"
+injection-regex = "pascal"
+file-types = ["pas", "pp", "inc", "lpr", "lfm"]
+comment-token = "//"
+block-comment-tokens = { start = "{", end = "}" }
+indent = { tab-width = 2, unit = "  " }
+auto-format = true
+language-servers = ["pasls", "uwu"]
+
+[[grammar]]
+name = "pascal"
+source = { git = "https://github.com/Isopod/tree-sitter-pascal", rev = "2fd40f477d3e2794af152618ccfac8d92eb72a66" }
+
+# ── CSS (with uwu for inline color swatches) ─────────────────────────
+[[language]]
+name = "css"
+auto-format = true
+language-servers = ["vscode-css-language-server", "uwu"]
+
+# ── HTML ──────────────────────────────────────────────────────────────
+[[language]]
+name = "html"
+auto-format = true
+language-servers = ["vscode-html-language-server", "uwu"]
+
+# ── TOML ──────────────────────────────────────────────────────────────
+[[language]]
+name = "toml"
+auto-format = true
+language-servers = ["taplo"]
+
+# ── JSON ──────────────────────────────────────────────────────────────
+[[language]]
+name = "json"
+auto-format = true
+
+# ── Markdown ──────────────────────────────────────────────────────────
+[[language]]
+name = "markdown"
+auto-format = false
+soft-wrap.enable = true
+
+# ── Bash / Shell ──────────────────────────────────────────────────────
+[[language]]
+name = "bash"
+auto-format = false

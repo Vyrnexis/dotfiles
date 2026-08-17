@@ -6,6 +6,7 @@ It is designed to be highly portable, performant, and clean, meaning it can be e
 
 ## What's Included
 
+- **Helix** (`helix`): Feature-rich modal editor configuration for v25.07 with Catppuccin theme, LSP integrations, spf/Lazygit bindings, and Vim-style motions.
 - **Neovim** (`nvim`): Super lightweight custom Lua-based configuration for development.
 - **Zsh** (`zsh`): Fully featured shell setup with paths, plugins, and fuzzy finding.
   - _Note: Zsh plugins are tracked as Git Submodules for easy syncing._
@@ -25,6 +26,7 @@ Ensure you have the following installed on your system:
 - `zsh`
 - `neovim`
 - `kitty`
+- `helix` (≥ 25.07, for the editor config)
 - `starship` (for the shell prompt)
 - `nimlaunch` (optional, custom launcher)
 
@@ -58,7 +60,7 @@ Navigate into the dotfiles directory and use `stow` to automatically create the 
 
 ```bash
 cd ~/dotfiles
-stow nvim zsh kitty nimlaunch
+stow nvim zsh kitty nimlaunch helix
 ```
 
 That's it! Restart your terminal and everything will be active.
