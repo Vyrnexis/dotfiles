@@ -17,6 +17,7 @@ setopt NUMERIC_GLOB_SORT
 
 # -------------- Init Zoxide --------
 if [[ ! -f "$XDG_CACHE_HOME/zsh/zoxide.zsh" ]]; then
+  mkdir -p "$XDG_CACHE_HOME/zsh"
   zoxide init zsh > "$XDG_CACHE_HOME/zsh/zoxide.zsh"
 fi
 source "$XDG_CACHE_HOME/zsh/zoxide.zsh"
