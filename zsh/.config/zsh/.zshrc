@@ -55,6 +55,6 @@ source "$ZDOTDIR/plugins.zsh"
 source "$ZDOTDIR/prompt.zsh"
 
 
-nymph --battery 10
+nymph
 
 
