@@ -19,6 +19,7 @@ default-line-ending = "lf"
 popup-border = "all"
 end-of-line-diagnostics = "hint"
 auto-pairs = true
+rainbow-brackets = true
 
 [editor.search]
 smart-case = true

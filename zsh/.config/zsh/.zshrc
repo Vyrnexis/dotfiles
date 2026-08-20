@@ -36,7 +36,7 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 # ------------- Fuzzy Finder -------
 if [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
   source /usr/share/fzf/key-bindings.zsh
-  source /usr/share/fzf/completion.zsh
+  [[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
 fi
 
 # ------- Fzf Config -------
@@ -55,6 +55,6 @@ source "$ZDOTDIR/plugins.zsh"
 source "$ZDOTDIR/prompt.zsh"
 
 
-nymph
+nymph --battery 10
 
 

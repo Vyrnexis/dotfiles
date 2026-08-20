@@ -33,6 +33,7 @@ path=(
   "$HOME/.nimble/bin"
   "$HOME/.local/share/grabnim/current/bin"
   "$HOME/.opencode/bin"
+  "$HOME/.steel/bin"
   $path
 )
 export PATH
