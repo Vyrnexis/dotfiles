@@ -11,6 +11,13 @@ export ZDOTDIR="${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}"
 export EDITOR="hx"
 export VISUAL="hx"
 
+# ---------- Helix ----------
+helix_runtime_dir="$HOME/Projects/Rust/helix/runtime"
+if [[ -d "$helix_runtime_dir" ]]; then
+  export HELIX_RUNTIME="$helix_runtime_dir"
+fi
+unset helix_runtime_dir
+
 # ---------- Dotfiles ----------
 export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 

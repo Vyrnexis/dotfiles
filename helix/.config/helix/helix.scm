@@ -4,6 +4,7 @@
 
 (codesnap-configure! #:theme "Dracula"
                      #:shadow-blur 15
-                     #:show-title? #t)
+                     #:show-title? #t
+                     #:clipboard-command "wl-copy -t image/png <")
 
 (provide codesnap codesnap-menu)

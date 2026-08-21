@@ -10,6 +10,7 @@ This configuration completely moves Zsh out of the `$HOME` directory and into `~
 - **Modular:** Separated into `aliases.zsh`, `bindings.zsh`, `prompt.zsh`, etc.
 - **Plugin Management:** A lightweight custom plugin loader (`plugins.zsh`) that pulls directly from GitHub without heavy frameworks.
 - **FZF Integration:** Configured to cleanly search for files (excluding `.git`) and preview them using `bat`.
+- **Helix Runtime:** Uses the local Steel-enabled Helix runtime when its source checkout is available.
 
 ## Structure
 
@@ -37,6 +38,10 @@ zsh/.config/zsh/
 | `fzf` | Package manager | Fuzzy finding |
 | `fd` | Package manager | Faster `find` used by FZF |
 | `rg` | Package manager | Ripgrep for searching text |
+
+If `~/Projects/Rust/helix/runtime` exists, `.zshenv` exports it through
+`HELIX_RUNTIME`. Other machines continue using the runtime bundled with their
+Helix installation.
 
 ## Installation
 

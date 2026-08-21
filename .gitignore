@@ -1,6 +1,3 @@
-# Helix local runtime build symlink
-helix/.config/helix/runtime
-
 # Local editor and operating-system files
 *~
 *.swp

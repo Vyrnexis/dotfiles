@@ -6,9 +6,6 @@
 # ╚══════════════════════════════════════════════════════════════════════╝
 
 # ── Nim ───────────────────────────────────────────────────────────────
-[language-server.nimlangserver]
-command = "nimlangserver"
-
 [language-server.nimlsp]
 command = "nimlsp"
 
@@ -73,7 +70,7 @@ comment-token = "#"
 indent = { tab-width = 2, unit = "  " }
 auto-format = true
 formatter = { command = "nimpretty", args = ["--stdin", "--indent:2"] }
-language-servers = ["nimlangserver", "uwu"]
+language-servers = ["nimlsp", "uwu"]
 auto-pairs = { '(' = ')', '[' = ']', '"' = '"', "'" = "'", '{' = '}' }
 
 # ── Go ────────────────────────────────────────────────────────────────
@@ -153,6 +150,7 @@ auto-format = true
 name = "markdown"
 auto-format = false
 soft-wrap.enable = true
+language-servers = ["marksman"]
 
 # ── Bash / Shell ──────────────────────────────────────────────────────
 [[language]]

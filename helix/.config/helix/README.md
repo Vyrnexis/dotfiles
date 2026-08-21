@@ -1,214 +1,165 @@
 # Helix Configuration
 
-Personal [Helix](https://helix-editor.com/) editor configuration for **v25.07**, managed with [GNU Stow](https://www.gnu.org/software/stow/).
+Personal configuration for Helix 25.07 with the experimental Steel plugin
+system, managed with GNU Stow.
 
-**Theme:** Catppuccin Mocha · **Statusline:** Mode / VCS / Diagnostics · **Auto-save:** On focus-lost + 5 s delay
+## Features
+
+- Catppuccin Mocha theme, relative line numbers, soft wrapping, indent guides,
+  rainbow brackets, inline diagnostics, and Wayland clipboard support.
+- Delayed and focus-lost auto-save.
+- Language tooling for Nim, Go, Python, Rust, Pascal, Bash, Markdown, TOML,
+  JSON, CSS, and HTML.
+- Superfile picker and Lazygit terminal integrations.
+- CodeSnap and Yank Flash Steel plugins.
 
 ## Structure
 
-```
+```text
 helix/.config/helix/
-├── config.toml          # Editor settings, theme & keybindings
-└── languages.toml       # Language servers & per-language config
+├── config.toml
+├── languages.toml
+├── helix.scm
+├── init.scm
+└── themes/
+    └── yank_flash/
 ```
 
-## Prerequisites
+- `config.toml` contains editor settings and keybindings.
+- `languages.toml` contains language servers and per-language overrides.
+- `helix.scm` exports and configures Steel commands.
+- `init.scm` loads plugins that register hooks at startup.
+- `themes/yank_flash` contains the temporary theme used for yank feedback.
 
-| Tool | Install | Used for |
-|------|---------|----------|
-| `helix` (≥ 25.07) | Package manager / source | The editor |
-| `nimlangserver` | `nimble install nimlangserver` | Nim LSP |
-| `gopls` | `go install golang.org/x/tools/gopls@latest` | Go LSP |
-| `pylsp` | `pip install python-lsp-server` | Python LSP |
-| `rust-analyzer` | `rustup component add rust-analyzer` | Rust LSP |
-| `pasls` | [pascal-language-server](https://github.com/castle-engine/pascal-language-server) | Pascal LSP |
-| `uwu_colors` | `cargo install uwu_colors` | Inline color display LSP |
-| `taplo` | `cargo install taplo-cli` | TOML LSP |
-| `spf` (superfile) | Package manager | Terminal file picker |
-| `lazygit` | Package manager | Git TUI |
+## Helix Runtime
+
+The Steel plugin system requires a Steel-enabled Helix build. On this machine,
+the checkout is located at `~/Projects/Rust/helix`.
+
+The Zsh package conditionally exports:
+
+```bash
+HELIX_RUNTIME="$HOME/Projects/Rust/helix/runtime"
+```
+
+The variable is only set when that directory exists. This avoids storing an
+absolute runtime symlink inside the Stow package and lets other machines use the
+runtime bundled with their Helix installation.
 
 ## Installation
 
 ```bash
 cd ~/dotfiles
-stow helix
+stow helix zsh
 ```
 
-To verify:
+Start a new shell after Stowing so `HELIX_RUNTIME` is available, then verify the
+configuration:
 
 ```bash
 hx --health
 ```
 
-## Keybindings
+## Steel Plugins
 
-### Helix Essentials
+Install the configured plugins with Steel's `forge` package manager:
 
-These are the most important built-in Helix keys. Helix uses a modal editing model similar to Vim/Kakoune.
+```bash
+forge pkg install --git https://github.com/Vyrnexis/codesnap.hx.git
+forge pkg install --git https://github.com/dmyyy/yank-flash.hx.git
+```
 
-#### Modes
+### CodeSnap
 
-| Key | Action |
-|-----|--------|
-| `i` | Enter **Insert** mode (before cursor) |
-| `a` | Enter **Insert** mode (after cursor) |
-| `v` | Enter **Select** mode |
-| `Esc` | Return to **Normal** mode |
+CodeSnap turns the current selection into an image using `silicon`. It is
+configured for KDE Wayland with `wl-copy`:
 
-#### Movement
+```text
+:codesnap
+:codesnap-menu
+:codesnap ~/Pictures/example.png
+```
 
-| Key | Action |
-|-----|--------|
-| `h` `j` `k` `l` | Left / Down / Up / Right |
-| `w` / `b` | Next / previous word |
-| `e` | End of word |
-| `f`_char_ / `t`_char_ | Find / till character |
-| `gg` | Go to start of file |
-| `ge` | Go to end of file |
-| `Ctrl-u` / `Ctrl-d` | Half-page up / down |
+Required commands: `silicon` and `wl-copy`.
 
-#### Editing
+### Yank Flash
 
-| Key | Action |
-|-----|--------|
-| `d` | Delete selection |
-| `c` | Change selection (delete + insert) |
-| `y` | Yank (copy) |
-| `p` / `P` | Paste after / before |
-| `u` / `U` | Undo / Redo |
-| `>` / `<` | Indent / Dedent |
-| `~` | Toggle case |
-| `J` | Join lines |
+Yank Flash briefly switches to the generated `yank_flash` theme after a yank.
+It is loaded from `init.scm` and requires the `yank-flash` Steel package.
 
-#### Selection
+## Custom Keybindings
 
 | Key | Action |
 |-----|--------|
-| `x` | Select entire line |
-| `X` | Extend line above |
-| `s` | Select regex matches within selection |
-| `;` | Collapse selection to cursor |
-| `Alt-;` | Flip selection direction |
-| `C` | Copy selection to next line |
-| `Alt-C` | Copy selection to previous line |
-
-#### Search
-
-| Key | Action |
-|-----|--------|
-| `/` | Search forward |
-| `?` | Search backward |
-| `n` / `N` | Next / previous match |
-
-#### Space Menu (Leader)
-
-| Key | Action |
-|-----|--------|
-| `Space` `f` | File picker |
-| `Space` `b` | Buffer picker |
-| `Space` `s` | Symbol picker (LSP or tree-sitter) |
-| `Space` `a` | Code action |
-| `Space` `r` | Rename symbol |
-| `Space` `k` | Show docs for item under cursor |
-| `Space` `d` | Show diagnostics |
-| `Space` `y` / `p` | Yank / paste to system clipboard |
-| `Space` `/` | Global search |
-| `Space` `?` | Command palette |
-
-#### Goto Menu
-
-| Key | Action |
-|-----|--------|
-| `g` `d` | Go to definition |
-| `g` `r` | Go to references |
-| `g` `i` | Go to implementation |
-| `g` `t` | Go to type definition |
-| `g` `a` | Go to last accessed file |
-| `g` `h` / `g` `l` | Go to line start / end |
-
-#### Match Menu
-
-| Key | Action |
-|-----|--------|
-| `m` `m` | Match bracket pair |
-| `m` `s` _char_ | Surround selection with character |
-| `m` `r` _old_ _new_ | Replace surrounding character |
-| `m` `d` _char_ | Delete surrounding character |
-
-#### Window Management
-
-| Key | Action |
-|-----|--------|
-| `Ctrl-w` `s` / `v` | Horizontal / vertical split |
-| `Ctrl-w` `h` `j` `k` `l` | Focus split |
-| `Ctrl-w` `q` | Close split |
-
-#### Commands
-
-| Command | Action |
-|---------|--------|
-| `:w` | Write file |
-| `:q` | Quit |
-| `:wq` | Write & quit |
-| `:q!` | Force quit |
-| `:theme` _name_ | Switch theme |
-| `:config-open` | Open config.toml |
-| `:config-reload` | Reload config |
-| `:lsp-restart` | Restart language server |
-| `:tutor` | Open the built-in tutorial |
-
----
-
-### Custom Keybindings
-
-These are the keybindings defined in this config on top of Helix defaults.
-
-#### Normal Mode
-
-| Key | Action | Notes |
-|-----|--------|-------|
-| `Ctrl-s` | Save file | Works in insert mode too |
-| `Ctrl-q` | Quit | |
-| `Ctrl-h` | Previous buffer | |
-| `Ctrl-l` | Next buffer | |
-| `Ctrl-e` | Open **Superfile (spf)** file picker | Opens spf in current file's directory |
-| `Ctrl-g` | Open **Lazygit** | Full git TUI inside Helix |
-| `X` | Extend line above | Complement to `x` (select line below) |
-| `Esc` | Collapse + keep primary | Clears multi-cursor back to one |
-
-#### Vim-Style Motions
-
-| Key | Action |
-|-----|--------|
+| `Ctrl-s` | Save in normal or insert mode |
+| `Ctrl-q` | Quit |
+| `Ctrl-h` / `Ctrl-l` | Previous or next buffer |
+| `Ctrl-e` | Select a file through Superfile |
+| `Ctrl-g` | Open Lazygit in a detached Kitty window |
+| `Space e` | Open the workspace file explorer |
+| `Space E` | Open the current directory file explorer |
+| `X` | Extend the selection one line upward |
 | `%` | Match brackets |
-| `*` | Search word under cursor (forward) |
-| `#` | Search word under cursor (backward) |
-| `$` | Go to end of line |
-| `0` | Go to start of line |
-| `G` | Go to end of file |
+| `*` / `#` | Search for the current word forward or backward |
+| `$` / `0` | Move to the end or start of the line |
+| `G` | Move to the end of the file |
 
-#### Space Menu (Custom)
+The Superfile integration uses a chooser file scoped to the current Helix
+process, preventing collisions between concurrent editor sessions.
 
-| Key | Action |
-|-----|--------|
-| `Space` `e` | Open file explorer (workspace root) |
-| `Space` `E` | Open file explorer (current file's directory) |
+## Language Tooling
 
-## Language Servers
+| Language | Server | Formatter or checks |
+|----------|--------|---------------------|
+| Nim | `nimlsp`, `uwu_colors` | `nimpretty` |
+| Go | `gopls`, `uwu_colors` | `gopls` formatting |
+| Python | `pylsp`, `uwu_colors` | Available through installed pylsp plugins |
+| Rust | `rust-analyzer`, `uwu_colors` | rust-analyzer and Clippy |
+| Pascal | `pasls`, `uwu_colors` | Available through Pascal LSP capabilities |
+| Bash | `bash-language-server` | Formatting disabled |
+| Markdown | `marksman` | Formatting disabled |
+| TOML | `taplo` | Taplo formatting |
+| CSS | `vscode-css-language-server`, `uwu_colors` | LSP formatting |
+| HTML | `vscode-html-language-server`, `uwu_colors` | LSP formatting |
+| JSON | `vscode-json-language-server` | LSP formatting |
 
-| Language | Server | Features |
-|----------|--------|----------|
-| Nim | `nimlangserver` | Completions, diagnostics, go-to-def |
-| Go | `gopls` | Full LSP + inlay hints (types, params, etc.) |
-| Python | `pylsp` | Completions, diagnostics, formatting |
-| Rust | `rust-analyzer` | Full LSP + `clippy` as check command |
-| Pascal | `pasls` | Completions, diagnostics |
-| TOML | `taplo` | Validation, formatting |
-| CSS / HTML | `vscode-*-language-server` | Standard web LSP |
-| _All above_ | `uwu_colors` | Inline color swatches for hex/rgb values |
+Rust being installed does not automatically provide `rust-analyzer`; it must be
+installed separately.
 
-## Auto-Format
+On Solus, install the remaining language tools with:
 
-Auto-format on save is **enabled** for: Nim, Go, Python, Rust, Pascal, CSS, HTML, TOML, JSON.
+```bash
+sudo eopkg install marksman
+npm install --global --prefix "$HOME/.local" bash-language-server
+cargo install --git https://github.com/rust-lang/rust-analyzer.git --locked rust-analyzer
+```
 
-Disabled for: Markdown, Bash (to avoid unwanted reformatting).
+The active Pascal server is maintained at
+[genericptr/pascal-language-server](https://github.com/genericptr/pascal-language-server).
+It does not publish prebuilt GitHub releases and must be built for Linux using
+Free Pascal and Lazarus. A macOS Mach-O build cannot run on Linux.
+
+## External Tools
+
+| Tool | Purpose |
+|------|---------|
+| `kitty` | Detached Lazygit terminal |
+| `lazygit` | Git interface |
+| `spf` | Superfile chooser |
+| `forge` | Steel package manager |
+| `silicon` | CodeSnap image renderer |
+| `wl-copy` and `wl-paste` | Wayland clipboard integration |
+
+## Diagnostics
+
+Check a specific language integration with:
+
+```bash
+hx --health nim
+hx --health go
+hx --health bash
+hx --health markdown
+```
+
+Helix reports command availability, runtime queries, formatter configuration,
+and debugger availability for each language.

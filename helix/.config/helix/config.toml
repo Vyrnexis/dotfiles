@@ -106,14 +106,15 @@ C-l = ":buffer-next"
 
 # Superfile file picker
 C-e = [
-  ':sh rm -f /tmp/unique-file',
-  ':insert-output sh -c "spf --chooser-file=/tmp/unique-file < /dev/tty > /dev/tty"',
-  ':open %sh{cat /tmp/unique-file}',
+  ':sh rm -f "/tmp/helix-superfile-$PPID"',
+  ':sh spf --chooser-file="/tmp/helix-superfile-$PPID" < /dev/tty > /dev/tty',
+  ':open %sh{cat "/tmp/helix-superfile-$PPID"}',
+  ':sh rm -f "/tmp/helix-superfile-$PPID"',
   ':redraw',
 ]
 
 # Lazygit integration
-C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
+C-g = [":sh kitty --detach --title=Lazygit lazygit", ":redraw"]
 
 [keys.normal.space]
 e = "file_explorer"
