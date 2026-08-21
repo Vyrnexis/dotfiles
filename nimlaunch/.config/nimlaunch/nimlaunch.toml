@@ -1,49 +1,35 @@
-# ==========================
-# NimLaunch Configuration
-# ==========================
-# Example NimLaunch configuration.
-# Copy this to ~/.config/nimlaunch/nimlaunch.toml and adjust it for your system.
-# All settings are optional — if removed, defaults will be used.
-# Colors must be in HEX format (e.g. "#RRGGBB").
+# Personal NimLaunch configuration managed by GNU Stow.
 
 [window]
-width = 500                       # Width of the launcher window in pixels
-opacity = 1.0                     # Window opacity (0.1 - 1.0); requires SDL support
-max_visible_items = 10            # Number of items visible at once (affects height)
-center = true                     # true: center window horizontally; false: use position_x/position_y
-position_x = 20                   # X position in pixels when center=false
-position_y = 500                  # Y position in pixels when center=false
-vertical_align = "one-third"      # Only used when center=true; "top", "center", or "one-third"
-display = 0                       # Display index when center=true (0 = primary)
+width = 500
+opacity = 1.0
+max_visible_items = 10
+center = true
+position_x = 20
+position_y = 500
+vertical_align = "one-third"
+display = 0
 
 [font]
-fontname = "Dejavu:size=16"       # Font name & size (e.g., "Font Family:size=N")
+fontname = "JetBrainsMono Nerd Font:size=16"
 
 [input]
-prompt = "> "                     # Prompt prefix shown before your query
-cursor = "_"                      # Cursor character displayed after query text
-vim_mode = false                  # true enables Vim-style modes/hjkl navigation
+prompt = "> "
+cursor = "_"
+vim_mode = false
 
 [terminal]
-program = "kitty"        # Replace this with your preferred terminal
+program = "kitty"
 
 [border]
-width = 2                         # Border thickness in pixels (0 = no border)
+width = 2
 
 [icons]
-enabled = true                    # Set to false to hide icons in the list
+enabled = true
 
 # ==========================
-# Shortcuts
+# Search shortcuts
 # ==========================
-# Define custom prefix triggers. Each shortcut supports:
-#   prefix  = letters you trigger with ':' (e.g. ':g')
-#   label   = text shown before your query in the results list
-#   base    = template containing optional {query} placeholder
-#   mode    = "url" (default), "shell", or "file"
-#   group   = optional group name (e.g. "sys")
-#   run_mode = "terminal" (default) or "spawn" for shell commands
-#   stay_open = true keeps NimLaunch open after running the action
 
 [[shortcuts]]
 prefix = ":g"
@@ -69,13 +55,21 @@ label  = "Man page search: "
 base   = "https://man.archlinux.org/search?q={query}"
 mode   = "url"
 
+[[shortcuts]]
+prefix = ":gh"
+label  = "Search GitHub: "
+base   = "https://github.com/search?q={query}&type=code"
+mode   = "url"
+
+[[shortcuts]]
+prefix = ":aw"
+label  = "Search Arch Wiki: "
+base   = "https://wiki.archlinux.org/index.php?search={query}"
+mode   = "url"
 
 # ==========================
 # Groups
 # ==========================
-# Define group names used by [[shortcuts]].
-# query_mode = "filter" (default) or "pass".
-
 [[groups]]
 name = "sys"
 query_mode = "filter"
@@ -85,8 +79,8 @@ name = "svc"
 query_mode = "pass"
 
 [[groups]]
-name = "dev"
-query_mode = "pass"
+name = "docs"
+query_mode = "filter"
 
 [[groups]]
 name = "ss"
@@ -97,16 +91,14 @@ name = "proj"
 query_mode = "filter"
 
 [[groups]]
-name = "media"
+name = "cheats"
 query_mode = "filter"
 
 [[groups]]
 name = "scripts"
 query_mode = "filter"
 
-# ==========================
-# Grouped shortcuts
-# ==========================
+# Service inspection passes the typed unit name to the selected command.
 
 [[shortcuts]]
 group     = "svc"
@@ -138,25 +130,53 @@ label     = "journalctl -u (recent errors): "
 base      = "journalctl -u {query} -xe"
 mode      = "shell"
 
-
+[[shortcuts]]
+group = "docs"
+label = "Nim language documentation"
+base  = "https://nim-lang.org/docs/"
+mode  = "url"
 
 [[shortcuts]]
-group     = "dev"
-label     = "Nim docs: "
-base      = "https://nim-lang.org/docs/lib.html"
-mode      = "url"
+group = "docs"
+label = "Go package documentation"
+base  = "https://pkg.go.dev/"
+mode  = "url"
 
 [[shortcuts]]
-group     = "dev"
-label     = "GitHub code search: "
-base      = "https://github.com/search?q={query}&type=code"
-mode      = "url"
+group = "docs"
+label = "Python documentation"
+base  = "https://docs.python.org/3/"
+mode  = "url"
 
 [[shortcuts]]
-group     = "dev"
-label     = "Arch Wiki: "
-base      = "https://wiki.archlinux.org/index.php?search={query}"
-mode      = "url"
+group = "docs"
+label = "Free Pascal documentation"
+base  = "https://www.freepascal.org/docs.html"
+mode  = "url"
+
+[[shortcuts]]
+group     = "cheats"
+label     = "Helix keybindings"
+base      = "exec \"$HOME/.local/bin/helix-cheatsheet\""
+mode      = "shell"
+run_mode  = "terminal"
+stay_open = false
+
+[[shortcuts]]
+group     = "cheats"
+label     = "Kitty shortcuts"
+base      = "exec \"$HOME/.local/bin/kitty-cheatsheet\""
+mode      = "shell"
+run_mode  = "terminal"
+stay_open = false
+
+[[shortcuts]]
+group     = "cheats"
+label     = "Neovim keybindings"
+base      = "exec \"$HOME/.local/bin/nvim-cheatsheet\""
+mode      = "shell"
+run_mode  = "terminal"
+stay_open = false
 
 [[shortcuts]]
 group     = "ss"
@@ -186,18 +206,9 @@ base      = "mkdir -p ~/Pictures/Screenshots && grim ~/Pictures/Screenshots/$(da
 mode      = "shell"
 run_mode  = "spawn"
 
-[[shortcuts]]
-group     = "media"
-label     = "Audio Sink"
-base      = "bash ~/.config/nimlaunch/scripts/nimlaunch_audio.sh"
-mode      = "shell"
-run_mode  = "spawn"
-
-# ==========================================
-# Showcase Scripts
-# ==========================================
-# Make sure you have the required dependencies installed (e.g., jq, bc, cliphist, nmcli)
-# The scripts are managed in `~/.config/nimlaunch/scripts/` by this Stow package.
+# ==========================
+# Script integrations
+# ==========================
 
 [[shortcuts]]
 prefix    = ":m"
@@ -209,8 +220,16 @@ stay_open = false
 
 [[shortcuts]]
 group     = "scripts"
+label     = "Audio Sink"
+base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_audio.sh"
+mode      = "shell"
+run_mode  = "spawn"
+stay_open = false
+
+[[shortcuts]]
+group     = "scripts"
 label     = "Window Switcher"
-base      = "bash ~/.config/nimlaunch/scripts/nimlaunch_windows.sh"
+base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_windows.sh"
 mode      = "shell"
 run_mode  = "spawn"
 stay_open = false
@@ -218,7 +237,7 @@ stay_open = false
 [[shortcuts]]
 group     = "scripts"
 label     = "Steam Games"
-base      = "bash ~/.config/nimlaunch/scripts/nimlaunch_steam.sh"
+base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_steam.sh"
 mode      = "shell"
 run_mode  = "spawn"
 stay_open = false
@@ -226,7 +245,7 @@ stay_open = false
 [[shortcuts]]
 group     = "scripts"
 label     = "Clipboard Manager (Hyprland)"
-base      = "bash ~/.config/nimlaunch/scripts/nimlaunch_cliphist.sh"
+base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_cliphist.sh"
 mode      = "shell"
 run_mode  = "spawn"
 stay_open = false
@@ -234,7 +253,7 @@ stay_open = false
 [[shortcuts]]
 group     = "scripts"
 label     = "Clipboard Manager (KDE Klipper)"
-base      = "bash ~/.config/nimlaunch/scripts/nimlaunch_klipper.sh"
+base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_klipper.sh"
 mode      = "shell"
 run_mode  = "spawn"
 stay_open = false
@@ -242,7 +261,7 @@ stay_open = false
 [[shortcuts]]
 group     = "scripts"
 label     = "WiFi Network Manager"
-base      = "bash ~/.config/nimlaunch/scripts/nimlaunch_wifi.sh"
+base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_wifi.sh"
 mode      = "shell"
 run_mode  = "spawn"
 stay_open = false
@@ -250,15 +269,47 @@ stay_open = false
 [[shortcuts]]
 group     = "scripts"
 label     = "Bluetooth Manager"
-base      = "bash ~/.config/nimlaunch/scripts/nimlaunch_bluetooth.sh"
+base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_bluetooth.sh"
 mode      = "shell"
 run_mode  = "spawn"
 stay_open = false
 
 [[shortcuts]]
 group     = "sys"
-label     = "Power Menu"
-base      = "bash ~/.config/nimlaunch/scripts/nimlaunch_power.sh"
+label     = "Lock session"
+base      = "loginctl lock-session"
+mode      = "shell"
+run_mode  = "spawn"
+stay_open = false
+
+[[shortcuts]]
+group     = "sys"
+label     = "Suspend system"
+base      = "systemctl suspend"
+mode      = "shell"
+run_mode  = "spawn"
+stay_open = false
+
+[[shortcuts]]
+group     = "sys"
+label     = "Log out"
+base      = "loginctl terminate-user \"$USER\""
+mode      = "shell"
+run_mode  = "spawn"
+stay_open = false
+
+[[shortcuts]]
+group     = "sys"
+label     = "Reboot system"
+base      = "systemctl reboot"
+mode      = "shell"
+run_mode  = "spawn"
+stay_open = false
+
+[[shortcuts]]
+group     = "sys"
+label     = "Shut down system"
+base      = "systemctl poweroff"
 mode      = "shell"
 run_mode  = "spawn"
 stay_open = false
@@ -288,24 +339,9 @@ base      = "~/Projects/Gits/github/Vyrnexis/Omawrite-Standalone"
 mode      = "file"
 
 # ==========================
-# Run commands
-# ==========================
-# Use `:r` (or `!`) to execute shell commands directly without a custom shortcut.
-
-# ==========================
 # Themes
 # ==========================
-# Add or remove [[themes]] blocks to customize appearance.
-# The "name" field is what you'll see in the `:t` theme selector.
-# Colors:
-#   bgColorHex          = Window background
-#   fgColorHex          = Normal text color
-#   highlightBgColorHex = Background of selected/highlighted item
-#   highlightFgColorHex = Text color of selected/highlighted item
-#   borderColorHex      = Window border color
-#   matchFgColorHex     = Color for matching characters in search results
-#
-# Tip: You can quickly preview themes in-app with the `t:` command.
+# Preview and select these themes with `:t`.
 
 [[themes]]
 name                = "Default"
@@ -423,7 +459,6 @@ highlightBgColorHex = "#88C0D0"
 highlightFgColorHex = "#2E3440"
 borderColorHex      = "#4C566A"
 matchFgColorHex     = ""
-
-
 [theme]
+# NimLaunch updates this value when a theme is selected.
 last_chosen = "Default"
