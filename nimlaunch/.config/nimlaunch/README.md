@@ -11,6 +11,8 @@ Personal configuration for my custom application launcher, [NimLaunch](https://g
   and system actions.
 - Pass-through service inspection with `systemctl` and `journalctl`.
 - Direct web-search and calculator prefixes.
+- Self-contained script plugins that can be copied, shared, and registered in
+  the launcher configuration.
 
 ## Commands
 
@@ -32,7 +34,9 @@ Personal configuration for my custom application launcher, [NimLaunch](https://g
 ```
 nimlaunch/.config/nimlaunch/
 ├── nimlaunch.toml    # Main layout, colors, and shortcut configuration
-└── scripts/          # Optional dmenu-style integration scripts
+└── scripts/
+    ├── README.md     # Plugin interface and authoring guide
+    └── *.sh          # Optional dmenu-style integration plugins
 ```
 
 ## Prerequisites
@@ -43,9 +47,14 @@ nimlaunch/.config/nimlaunch/
 | `kitty` | Package manager | Interactive terminal actions |
 | `JetBrainsMono Nerd Font` | [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts) | Launcher text |
 
-Individual scripts require the tools named in their file headers. Depending on
-the selected shortcuts, these include PipeWire, NetworkManager, BlueZ, Steam,
-Hyprland, KDE Klipper, `jq`, `bc`, `grim`, `slurp`, and `wl-copy`.
+Each plugin checks its own requirements and reports missing commands. Depending
+on the selected plugins, these include PipeWire, NetworkManager, BlueZ, Steam,
+Hyprland, KDE Klipper, `jq`, `bc`, `grim`, `slurp`, and `wl-copy`. Calculator
+results are still shown when the optional `wl-copy` command is unavailable.
+
+The clipboard plugin automatically uses `cliphist` with `wl-copy` when they are
+available, otherwise it uses KDE Klipper through `busctl`. Wi-Fi passwords are
+requested through `zenity` or `kdialog` so they are not shown in NimLaunch.
 
 The `:t` theme selector writes the selected theme to `[theme].last_chosen`.
 Because this file is linked from the repository, selecting a theme modifies the
@@ -57,3 +66,6 @@ tracked configuration.
 cd ~/dotfiles
 stow nimlaunch
 ```
+
+See [scripts/README.md](scripts/README.md) to create, register, and share a
+plugin.

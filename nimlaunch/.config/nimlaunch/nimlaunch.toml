@@ -181,28 +181,28 @@ stay_open = false
 [[shortcuts]]
 group     = "ss"
 label     = "Screenshot area -> clipboard"
-base      = "grim -g \"$(slurp)\" - | wl-copy"
+base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_screenshot.sh area clipboard"
 mode      = "shell"
 run_mode  = "spawn"
 
 [[shortcuts]]
 group     = "ss"
 label     = "Screenshot area -> save"
-base      = "mkdir -p ~/Pictures/Screenshots && grim -g \"$(slurp)\" ~/Pictures/Screenshots/$(date '+%Y-%m-%d_%H-%M-%S').png"
+base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_screenshot.sh area save"
 mode      = "shell"
 run_mode  = "spawn"
 
 [[shortcuts]]
 group     = "ss"
 label     = "Full screenshot -> clipboard"
-base      = "grim - | wl-copy"
+base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_screenshot.sh full clipboard"
 mode      = "shell"
 run_mode  = "spawn"
 
 [[shortcuts]]
 group     = "ss"
 label     = "Full screenshot -> save"
-base      = "mkdir -p ~/Pictures/Screenshots && grim ~/Pictures/Screenshots/$(date '+%Y-%m-%d_%H-%M-%S').png"
+base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_screenshot.sh full save"
 mode      = "shell"
 run_mode  = "spawn"
 
@@ -213,7 +213,7 @@ run_mode  = "spawn"
 [[shortcuts]]
 prefix    = ":m"
 label     = "Calculate: "
-base      = "res=$(echo {query} | bc -l); echo \"$res\" | wl-copy; notify-send 'Calculator' \"Result: $res\" -i accessories-calculator"
+base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_calculator.sh {query}"
 mode      = "shell"
 run_mode  = "spawn"
 stay_open = false
@@ -244,16 +244,8 @@ stay_open = false
 
 [[shortcuts]]
 group     = "scripts"
-label     = "Clipboard Manager (Hyprland)"
-base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_cliphist.sh"
-mode      = "shell"
-run_mode  = "spawn"
-stay_open = false
-
-[[shortcuts]]
-group     = "scripts"
-label     = "Clipboard Manager (KDE Klipper)"
-base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_klipper.sh"
+label     = "Clipboard Manager"
+base      = "$HOME/.config/nimlaunch/scripts/nimlaunch_clipboard.sh"
 mode      = "shell"
 run_mode  = "spawn"
 stay_open = false

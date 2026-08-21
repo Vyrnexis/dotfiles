@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+NIMLAUNCH_BIN="${NIMLAUNCH_BIN:-nimlaunch}"
+EXAMPLE_BIN="${EXAMPLE_BIN:-example-command}"
+
+# Exits with an actionable message when a required command is unavailable.
+require_command() {
+  local command_name="$1"
+
+  if ! command -v "$command_name" >/dev/null 2>&1; then
+    printf 'nimlaunch_example: required command not found: %s\n' "$command_name" >&2
+    exit 127
+  fi
+}
+
+require_command "$NIMLAUNCH_BIN"
+require_command "$EXAMPLE_BIN"
+
+declare -a item_ids=("first-id" "second-id")
+declare -a item_labels=("First item" "Second item")
+
+selection="$(
+  for label in "${item_labels[@]}"; do
+    printf '%s\0icon\x1f%s\n' "$label" "application-x-executable"
+  done | "$NIMLAUNCH_BIN" --dmenu -p "Example:"
+)" || {
+  selection_status=$?
+  ((selection_status == 1)) && exit 0
+  exit "$selection_status"
+}
+[[ -n "$selection" ]] || exit 0
+
+for index in "${!item_labels[@]}"; do
+  if [[ "${item_labels[$index]}" == "$selection" ]]; then
+    "$EXAMPLE_BIN" "${item_ids[$index]}"
+    exit 0
+  fi
+done
+
+printf 'nimlaunch_example: selection did not match an item\n' >&2
+exit 1

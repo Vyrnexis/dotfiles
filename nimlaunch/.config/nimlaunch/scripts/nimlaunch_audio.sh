@@ -1,30 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-NIMLAUNCH="nimlaunch"
-if [[ -f "./bin/nimlaunch" ]]; then
-    NIMLAUNCH="./bin/nimlaunch"
-fi
-
+NIMLAUNCH_BIN="${NIMLAUNCH_BIN:-nimlaunch}"
 WPCTL_BIN="${WPCTL_BIN:-wpctl}"
-# PipeWire graph dump tool used to enumerate real Audio/Sink nodes.
 PIPEWIRE_DUMP_BIN="${PIPEWIRE_DUMP_BIN:-pw-dump}"
 
-if ! command -v "$NIMLAUNCH" >/dev/null 2>&1 && [[ ! -x "$NIMLAUNCH" ]]; then
-  printf 'nimlaunch_audio: nimlaunch not found\n' >&2
-  exit 127
-fi
+# Exits with an actionable message when a required command is unavailable.
+require_command() {
+  local command_name="$1"
 
-if ! command -v "$WPCTL_BIN" >/dev/null 2>&1; then
-  printf 'audio-sink-picker: wpctl not found\n' >&2
-  exit 127
-fi
+  if ! command -v "$command_name" >/dev/null 2>&1; then
+    printf 'nimlaunch_audio: required command not found: %s\n' "$command_name" >&2
+    exit 127
+  fi
+}
 
-if ! command -v "$PIPEWIRE_DUMP_BIN" >/dev/null 2>&1; then
-  printf 'audio-sink-picker: pw-dump not found\n' >&2
-  exit 127
-fi
-
+# Returns the numeric ID of the current default audio sink.
 default_sink_id() {
   "$WPCTL_BIN" inspect @DEFAULT_AUDIO_SINK@ 2>/dev/null | awk '
     /^id[[:space:]]+[0-9]+,/ {
@@ -35,11 +26,11 @@ default_sink_id() {
   '
 }
 
+# Emits each PipeWire audio sink as a tab-separated ID and display name.
 sink_rows() {
   "$PIPEWIRE_DUMP_BIN" --raw 2>/dev/null | perl -MJSON::PP -e '
     local $/;
-    my $json = <STDIN>;
-    my $data = eval { JSON::PP::decode_json($json) };
+    my $data = eval { JSON::PP::decode_json(<STDIN>) };
     exit 1 if !$data || ref($data) ne "ARRAY";
     for my $obj (@$data) {
       next if ref($obj) ne "HASH";
@@ -48,58 +39,64 @@ sink_rows() {
       next if ($props->{"media.class"} // "") ne "Audio/Sink";
       my $id = $obj->{id};
       next if !defined $id;
-      my $name =
-           $props->{"node.description"}
+      my $name = $props->{"node.description"}
         // $props->{"device.description"}
         // $props->{"node.nick"}
         // $props->{"node.name"}
         // "Sink $id";
-      $name =~ s/[\r\n]+/ /g;
+      $name =~ s/[\r\n\t]+/ /g;
       print "$id\t$name\n";
     }
   '
 }
 
-declare -a SINK_IDS=()
-declare -a SINK_LABELS=()
-DEFAULT_ID="$(default_sink_id)"
+require_command "$NIMLAUNCH_BIN"
+require_command "$WPCTL_BIN"
+require_command "$PIPEWIRE_DUMP_BIN"
+require_command perl
+
+if ! perl -MJSON::PP -e 'exit 0' >/dev/null 2>&1; then
+  printf 'nimlaunch_audio: Perl module JSON::PP is required\n' >&2
+  exit 127
+fi
+
+declare -a sink_ids=()
+declare -a sink_labels=()
+default_id="$(default_sink_id || true)"
 
 while IFS=$'\t' read -r id name; do
   [[ -n "$id" ]] || continue
-  marker=" "
-  [[ -n "${DEFAULT_ID:-}" && "$id" == "$DEFAULT_ID" ]] && marker="*"
-  label="$marker $name"
-
-  duplicate=0
-  for existing in "${SINK_LABELS[@]:-}"; do
-    if [[ "$existing" == "$label" ]]; then
-      duplicate=1
-      break
-    fi
-  done
-  if ((duplicate)); then
-    label="$marker $name ($id)"
-  fi
-
-  SINK_IDS+=("$id")
-  SINK_LABELS+=("$label")
+  marker=""
+  [[ "$id" == "$default_id" ]] && marker=" [default]"
+  sink_ids+=("$id")
+  sink_labels+=("$name$marker [$id]")
 done < <(sink_rows)
 
-((${#SINK_IDS[@]} > 0)) || exit 1
+((${#sink_ids[@]} > 0)) || {
+  printf 'nimlaunch_audio: no audio sinks found\n' >&2
+  exit 1
+}
 
 selection="$(
-  printf '%b\n' "${SINK_LABELS[@]/%/\\0icon\\x1faudio-speakers}" | "$NIMLAUNCH" --dmenu
-)" || exit $?
-[[ -n "$selection" ]] || exit 1
+  for label in "${sink_labels[@]}"; do
+    printf '%s\0icon\x1f%s\n' "$label" "audio-speakers"
+  done | "$NIMLAUNCH_BIN" --dmenu -p "Audio sink:"
+)" || {
+  selection_status=$?
+  ((selection_status == 1)) && exit 0
+  exit "$selection_status"
+}
+[[ -n "$selection" ]] || exit 0
 
-sink_id=""
-for i in "${!SINK_LABELS[@]}"; do
-  if [[ "${SINK_LABELS[$i]}" == "$selection" ]]; then
-    sink_id="${SINK_IDS[$i]}"
-    break
+for index in "${!sink_labels[@]}"; do
+  if [[ "${sink_labels[$index]}" == "$selection" ]]; then
+    "$WPCTL_BIN" set-default "${sink_ids[$index]}"
+    if command -v notify-send >/dev/null 2>&1; then
+      notify-send "Audio sink" "Selected ${sink_labels[$index]}" -i audio-speakers || true
+    fi
+    exit 0
   fi
 done
 
-[[ -n "$sink_id" ]] || exit 1
-
-"$WPCTL_BIN" set-default "$sink_id"
+printf 'nimlaunch_audio: selection did not match an audio sink\n' >&2
+exit 1
