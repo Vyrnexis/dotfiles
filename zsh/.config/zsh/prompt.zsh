@@ -5,8 +5,7 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 FUNCNEST=100
 
-if [[ ! -f "$XDG_CACHE_HOME/zsh/starship.zsh" ]]; then
-  mkdir -p "$XDG_CACHE_HOME/zsh"
+if command -v starship >/dev/null 2>&1 && [[ ! -s "$XDG_CACHE_HOME/zsh/starship.zsh" ]]; then
   starship init zsh > "$XDG_CACHE_HOME/zsh/starship.zsh"
 fi
-source "$XDG_CACHE_HOME/zsh/starship.zsh"
+[[ -r "$XDG_CACHE_HOME/zsh/starship.zsh" ]] && source "$XDG_CACHE_HOME/zsh/starship.zsh"

@@ -1,0 +1,4 @@
+inherits = "catppuccin_mocha"
+
+"ui.selection" = { bg = "bg", modifiers = ["reversed"] }
+"ui.selection.primary" = { bg = "bg", modifiers = ["reversed"] }

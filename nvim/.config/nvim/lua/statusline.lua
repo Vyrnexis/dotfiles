@@ -1,5 +1,5 @@
 -- ==============================================================================
--- 📊 ASYNCHRONOUS GIT STATUSLINE
+-- ASYNCHRONOUS GIT STATUSLINE
 -- ==============================================================================
 -- This statusline avoids blocking the UI by querying Git branch/root information
 -- asynchronously in the background every time a buffer is entered.
@@ -52,24 +52,29 @@ end
 vim.api.nvim_create_autocmd("BufEnter", {
 	callback = function(args)
 		local bufnr = args.buf
+		local bufname = vim.api.nvim_buf_get_name(bufnr)
+		local lookup_dir = bufname ~= "" and vim.fn.fnamemodify(bufname, ":h") or vim.fn.getcwd()
 		-- Set defaults immediately so statusline doesn't flicker empty
 		vim.b[bufnr].rel_path = vim.fn.expand("%:p:~")
 		vim.b[bufnr].git_branch = nil
 
 		-- Run `git rev-parse` asynchronously
-		vim.system({ "git", "rev-parse", "--show-toplevel" }, { text = true }, function(out_root)
+		vim.system({ "git", "-C", lookup_dir, "rev-parse", "--show-toplevel" }, { text = true }, function(out_root)
 			if out_root.code == 0 and out_root.stdout then
 				local root = out_root.stdout:gsub("%s+$", "")
 				if root ~= "" then
 					vim.schedule(function()
 						if vim.api.nvim_buf_is_valid(bufnr) then
 							-- Trim the absolute path to make it relative to the git root
-							vim.b[bufnr].rel_path = vim.api.nvim_buf_get_name(bufnr):sub(#root + 2)
+							local current_name = vim.api.nvim_buf_get_name(bufnr)
+							if current_name:sub(1, #root + 1) == root .. "/" then
+								vim.b[bufnr].rel_path = current_name:sub(#root + 2)
+							end
 						end
 					end)
 
 					-- Run `git branch` asynchronously
-					vim.system({ "git", "branch", "--show-current" }, { text = true }, function(out_branch)
+					vim.system({ "git", "-C", root, "branch", "--show-current" }, { text = true }, function(out_branch)
 						if out_branch.code == 0 and out_branch.stdout then
 							local branch = out_branch.stdout:gsub("%s+$", "")
 							vim.schedule(function()

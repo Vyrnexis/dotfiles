@@ -1,5 +1,5 @@
 -- ==============================================================================
--- 🩺 DIAGNOSTICS & ERRORS
+-- DIAGNOSTICS & ERRORS
 -- ==============================================================================
 
 -- Map <leader>d to gather all LSP diagnostics (errors/warnings) in the current project

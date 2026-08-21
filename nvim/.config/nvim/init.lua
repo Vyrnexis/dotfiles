@@ -1,5 +1,5 @@
 -- ==============================================================================
--- 🚀 NEOVIM 0.12+ MINIMALIST CONFIGURATION ENTRY POINT
+-- NEOVIM 0.12+ MINIMALIST CONFIGURATION ENTRY POINT
 -- ==============================================================================
 -- This is the main entry point for Neovim. It simply sets the leader key
 -- and then loads all the modular configuration files from the `lua/` directory.

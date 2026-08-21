@@ -100,6 +100,10 @@ query_mode = "filter"
 name = "media"
 query_mode = "filter"
 
+[[groups]]
+name = "scripts"
+query_mode = "filter"
+
 # ==========================
 # Grouped shortcuts
 # ==========================
@@ -193,7 +197,7 @@ run_mode  = "spawn"
 # Showcase Scripts
 # ==========================================
 # Make sure you have the required dependencies installed (e.g., jq, bc, cliphist, nmcli)
-# and copy the `examples/scripts/` folder to `~/.config/nimlaunch/scripts/`.
+# The scripts are managed in `~/.config/nimlaunch/scripts/` by this Stow package.
 
 [[shortcuts]]
 prefix    = ":m"

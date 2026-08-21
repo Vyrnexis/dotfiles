@@ -2,6 +2,7 @@
 HISTFILE="$XDG_STATE_HOME/zsh/history"
 HISTSIZE=100000
 SAVEHIST=100000
+mkdir -p "${HISTFILE:h}" "$XDG_CACHE_HOME/zsh"
 
 setopt APPEND_HISTORY
 setopt SHARE_HISTORY
@@ -16,11 +17,10 @@ setopt NOBEEP
 setopt NUMERIC_GLOB_SORT
 
 # -------------- Init Zoxide --------
-if [[ ! -f "$XDG_CACHE_HOME/zsh/zoxide.zsh" ]]; then
-  mkdir -p "$XDG_CACHE_HOME/zsh"
+if command -v zoxide >/dev/null 2>&1 && [[ ! -s "$XDG_CACHE_HOME/zsh/zoxide.zsh" ]]; then
   zoxide init zsh > "$XDG_CACHE_HOME/zsh/zoxide.zsh"
 fi
-source "$XDG_CACHE_HOME/zsh/zoxide.zsh"
+[[ -r "$XDG_CACHE_HOME/zsh/zoxide.zsh" ]] && source "$XDG_CACHE_HOME/zsh/zoxide.zsh"
 
 # ------------- Completion --------
 autoload -Uz compinit
@@ -55,6 +55,7 @@ source "$ZDOTDIR/plugins.zsh"
 source "$ZDOTDIR/prompt.zsh"
 
 
-nymph
-
+if command -v nymph >/dev/null 2>&1; then
+  nymph
+fi
 

@@ -1,5 +1,5 @@
 -- ==============================================================================
--- 🧩 NATIVE PACKAGE MANAGEMENT
+-- NATIVE PACKAGE MANAGEMENT
 -- ==============================================================================
 
 -- Add plugins natively using Neovim 0.12's vim.pack.add
@@ -7,7 +7,7 @@ vim.pack.add({ "https://github.com/nvim-treesitter/nvim-treesitter" })
 vim.pack.add({ "https://github.com/brenoprata10/nvim-highlight-colors" })
 
 -- ==============================================================================
--- 🌲 TREESITTER SETUP
+-- TREESITTER SETUP
 -- ==============================================================================
 
 -- Configure Treesitter parsers to automatically install and run
@@ -40,7 +40,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 -- ==============================================================================
--- 🎨 COLOR HIGHLIGHTER SETUP
+-- COLOR HIGHLIGHTER SETUP
 -- ==============================================================================
 
 -- Automatically render virtual color boxes next to hex/rgb codes

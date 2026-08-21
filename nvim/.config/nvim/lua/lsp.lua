@@ -1,5 +1,5 @@
 -- ==============================================================================
--- 🧠 LANGUAGE SERVER PROTOCOL (LSP)
+-- LANGUAGE SERVER PROTOCOL (LSP)
 -- ==============================================================================
 
 -- Enable Language Servers natively using Neovim 0.11/0.12 APIs

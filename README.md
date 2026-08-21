@@ -1,66 +1,80 @@
 # Dotfiles
 
-This repository contains my personal configurations for Linux, managed with [GNU Stow](https://www.gnu.org/software/stow/).
+Personal Linux configuration managed as GNU Stow packages.
 
-It is designed to be highly portable, performant, and clean, meaning it can be easily deployed on any Linux distribution (Solus, Arch, Ubuntu, etc.) with a single command.
+## Packages
 
-## What's Included
+- `bin`: local cheatsheet commands installed under `~/.local/bin`
+- `helix`: Helix editor configuration and language-server settings
+- `kitty`: Kitty terminal configuration and Dracula theme
+- `nimlaunch`: NimLaunch configuration and launcher scripts
+- `nvim`: minimal Lua-based Neovim configuration
+- `zsh`: XDG-based Zsh configuration, plugins, and Starship prompt
 
-- **Helix** (`helix`): Feature-rich modal editor configuration for v25.07 with Catppuccin theme, LSP integrations, spf/Lazygit bindings, and Vim-style motions.
-- **Neovim** (`nvim`): Super lightweight custom Lua-based configuration for development.
-- **Zsh** (`zsh`): Fully featured shell setup with paths, plugins, and fuzzy finding.
-  - _Note: Zsh plugins are tracked as Git Submodules for easy syncing._
-- **Kitty** (`kitty`): A beautiful, hardware-accelerated terminal configuration with Dracula theme.
-- **NimLaunch** (`nimlaunch`): Configuration for my own custom launcher project, which you can find at [Vyrnexis/NimLaunch](https://github.com/Vyrnexis/NimLaunch).
+The Zsh plugins are pinned as Git submodules. Machine-local files, such as the
+Helix runtime symlink, are intentionally excluded from Git.
 
-## Installation
+## Prerequisites
 
-To replicate this exact setup on a fresh Linux machine, simply follow these steps.
-
-### 1. Prerequisites
-
-Ensure you have the following installed on your system:
+Install the packages you intend to stow, plus these base tools:
 
 - `git`
 - `stow`
 - `zsh`
-- `neovim`
-- `kitty`
-- `helix` (≥ 25.07, for the editor config)
-- `starship` (for the shell prompt)
-- `nimlaunch` (optional, custom launcher)
+- `bash`, `less`, and `sed` for the cheatsheet scripts
 
-### 2. Configure Zsh Directory
+Each package README documents its optional tools, fonts, language servers, and
+formatters.
 
-To keep the home directory clean, this configuration routes Zsh to `~/.config/zsh`. You must globally tell Zsh where to look by adding these to your system config (`/etc/zsh/zshenv`):
+## Installation
 
-```bash
-if [[ -z "$XDG_CONFIG_HOME" ]]
-then
-	export XDG_CONFIG_HOME="$HOME/.config"
-fi
-
-if [[ -d "$XDG_CONFIG_HOME/zsh" ]]
-then
-	export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
-fi
-```
-
-### 3. Clone the Repository
-
-Because the Zsh plugins are managed via Git Submodules, you **must** use the `--recurse-submodules` flag when cloning so that they are downloaded automatically:
+Clone the repository with its Zsh plugin submodules:
 
 ```bash
 git clone --recurse-submodules https://github.com/Vyrnexis/dotfiles.git ~/dotfiles
+cd ~/dotfiles
 ```
 
-### 4. Stow the Configs
+Zsh is stored under `~/.config/zsh`. Before stowing it, configure Zsh to find
+that directory in `/etc/zsh/zshenv` or the equivalent system-wide file:
 
-Navigate into the dotfiles directory and use `stow` to automatically create the symlinks in your home directory:
+```zsh
+if [[ -z "$XDG_CONFIG_HOME" ]]; then
+  export XDG_CONFIG_HOME="$HOME/.config"
+fi
+
+if [[ -d "$XDG_CONFIG_HOME/zsh" ]]; then
+  export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+fi
+```
+
+Preview the links, then install all packages:
 
 ```bash
-cd ~/dotfiles
-stow nvim zsh kitty nimlaunch helix
+stow --no --verbose=2 --target="$HOME" bin helix kitty nimlaunch nvim zsh
+stow --target="$HOME" bin helix kitty nimlaunch nvim zsh
 ```
 
-That's it! Restart your terminal and everything will be active.
+Existing files at a target path can cause Stow conflicts. Review and move those
+files yourself before retrying; do not use `stow --adopt` unless you intend to
+replace repository files with the target files.
+
+## Maintenance
+
+Restow packages after reorganizing files:
+
+```bash
+stow --restow --target="$HOME" bin helix kitty nimlaunch nvim zsh
+```
+
+Remove the managed links without deleting repository files:
+
+```bash
+stow --delete --target="$HOME" bin helix kitty nimlaunch nvim zsh
+```
+
+Update submodules after pulling repository changes:
+
+```bash
+git submodule update --init --recursive
+```

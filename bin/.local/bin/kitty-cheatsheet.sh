@@ -5,11 +5,12 @@ set -euo pipefail
 
 if [ -t 1 ] && command -v tput >/dev/null 2>&1; then
   BOLD=$(tput bold); RESET=$(tput sgr0)
-  C1=$(tput setaf 6); C2=$(tput setaf 2); C3=$(tput setaf 3); C4=$(tput setaf 4)
+  C1=$(tput setaf 6); C2=$(tput setaf 2)
 else
-  BOLD=""; RESET=""; C1=""; C2=""; C3=""; C4=""
+  BOLD=""; RESET=""; C1=""; C2=""
 fi
 
+# Opens less with color support and compact-screen behavior.
 pager() {
   LESS=${LESS:-"-RFXS"}
   exec less -R
@@ -91,4 +92,3 @@ ${BOLD}${C2}TIPS${RESET}
   - To make changes live, press ${BOLD}Ctrl+Shift+F5${RESET}.
 
 EOF
-

@@ -4,6 +4,7 @@
 
 ZPLUGINDIR="${ZDOTDIR:-$HOME/.config/zsh}/plugins"
 
+# Loads a plugin, cloning it first when the submodule is unavailable.
 _zplugin_load() {
   local plugin_path="${ZPLUGINDIR}/${2}"
   if [[ ! -d "$plugin_path" ]]; then
@@ -15,6 +16,7 @@ _zplugin_load() {
   source "${plugin_path}/${2}.plugin.zsh"
 }
 
+# Fast-forwards every installed plugin repository.
 zplugin-update() {
   local dir
   for dir in "${ZPLUGINDIR}"/*/; do

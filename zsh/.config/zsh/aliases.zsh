@@ -30,7 +30,8 @@ alias df='df -h'
 
 alias -- -='cd -'  # -- prevents - being parsed as a flag; cd - jumps to previous directory
 
-lf() { # zsh follow lf navigation
+# Runs lf and changes the shell directory to its last visited directory.
+lf() {
     tmp=$(mktemp)
     command lf -last-dir-path="$tmp" "$@"
     if [ -f "$tmp" ]; then
@@ -52,7 +53,7 @@ alias vim='nvim'
 
 alias glog='PAGER="less -F -X" git log'                              # -F quit if one screen, -X no clear on exit
 alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
-alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
+alias dotfiles='git -C "$DOTFILES_DIR"'
 
 # =========================================================
 # Video

@@ -7,13 +7,13 @@ set -euo pipefail
 # Basic terminal colours (fallback to plain if not a TTY)
 if [ -t 1 ] && command -v tput >/dev/null 2>&1; then
   BOLD="$(tput bold)"; DIM="$(tput dim)"; RESET="$(tput sgr0)"
-  C1="$(tput setaf 6)"; C2="$(tput setaf 2)"; C3="$(tput setaf 3)"; C4="$(tput setaf 4)"; C5="$(tput setaf 5)"
+  C1="$(tput setaf 6)"; C2="$(tput setaf 2)"
 else
-  BOLD=""; DIM=""; RESET=""; C1=""; C2=""; C3=""; C4=""; C5=""
+  BOLD=""; DIM=""; RESET=""; C1=""; C2=""
 fi
 
+# Opens less with color support and compact-screen behavior.
 pager() {
-  # -R: pass raw color codes; -F: quit if one screen; -X: don't clear on exit; -S: chop long lines
   LESS=${LESS:-"-RFXS"}
   exec less -R
 }
@@ -106,4 +106,3 @@ ${DIM}Notes:${RESET}
 - Searching this page: press ${BOLD}/${RESET} then type a keyword (e.g. ${BOLD}/LSP${RESET}).
 
 EOF
-

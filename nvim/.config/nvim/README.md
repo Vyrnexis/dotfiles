@@ -67,28 +67,28 @@ Because we rely on standard command-line tools rather than heavy Neovim wrappers
 
 ### Languages
 
-#### 🐍 Python
+#### Python
 
 - **LSP:** `pyright`
 - **Formatter:** `black`
 - **Install:** `pip install pyright black`
 
-#### 🐹 Go
+#### Go
 
 - **LSP & Formatter:** `gopls`
 - **Install:** `go install golang.org/x/tools/gopls@latest`
 
-#### 👑 Nim
+#### Nim
 
 - **LSP & Formatter:** `nimlsp`
 - **Install:** `nimble install nimlsp`
 
-#### 📜 Pascal / Delphi
+#### Pascal / Delphi
 
 - **LSP:** `pasls` (Pascal Language Server)
 - **Install:** Build from source via [genericptr/pascal-language-server](https://github.com/genericptr/pascal-language-server)
 
-#### 🌙 Lua (Neovim Configs)
+#### Lua (Neovim Configs)
 
 - **LSP:** `lua-language-server`
 - **Formatter:** `stylua`
@@ -104,7 +104,7 @@ Because we rely on standard command-line tools rather than heavy Neovim wrappers
   ln -sf ~/.local/share/lua-language-server/bin/lua-language-server ~/.local/bin/lua-language-server
   ```
 
-#### ⚙️ JSON & TOML & Markdown
+#### JSON, TOML, and Markdown
 
 - **JSON Formatter:** `jq` (Usually pre-installed on Linux)
 - **TOML Formatter:** `taplo` (`cargo install taplo-cli`)
