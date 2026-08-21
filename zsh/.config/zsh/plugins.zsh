@@ -4,28 +4,28 @@
 
 ZPLUGINDIR="${ZDOTDIR:-$HOME/.config/zsh}/plugins"
 
-# Loads a plugin, cloning it first when the submodule is unavailable.
+# Loads a plugin from its pinned Git submodule.
 _zplugin_load() {
-  local plugin_path="${ZPLUGINDIR}/${2}"
-  if [[ ! -d "$plugin_path" ]]; then
-    mkdir -p "$ZPLUGINDIR"
-    echo "Installing ${2}..."
-    git clone --depth=1 "https://github.com/${1}/${2}" "$plugin_path" \
-      || { echo "ERROR: failed to install ${2}" >&2; return 1; }
+  local plugin_name="$1"
+  local plugin_file="${ZPLUGINDIR}/${plugin_name}/${plugin_name}.plugin.zsh"
+  if [[ ! -r "$plugin_file" ]]; then
+    print -u2 "Missing Zsh plugin: ${plugin_name}"
+    print -u2 "Run: git -C ${DOTFILES_DIR} submodule update --init --recursive"
+    return 1
   fi
-  source "${plugin_path}/${2}.plugin.zsh"
+  source "$plugin_file"
 }
 
-# Fast-forwards every installed plugin repository.
+# Updates pinned plugin submodules to their remote default branches.
 zplugin-update() {
-  local dir
-  for dir in "${ZPLUGINDIR}"/*/; do
-    echo "Updating ${dir:t}..."
-    git -C "$dir" pull --ff-only
-  done
+  git -C "$DOTFILES_DIR" submodule update --remote --merge --recursive -- \
+    zsh/.config/zsh/plugins/fast-syntax-highlighting \
+    zsh/.config/zsh/plugins/zsh-autosuggestions \
+    zsh/.config/zsh/plugins/zsh-history-substring-search \
+    zsh/.config/zsh/plugins/zsh-vi-mode
 }
 
-_zplugin_load zsh-users zsh-autosuggestions
-_zplugin_load zsh-users zsh-history-substring-search
-_zplugin_load jeffreytse zsh-vi-mode
-_zplugin_load zdharma-continuum fast-syntax-highlighting
+_zplugin_load zsh-autosuggestions
+_zplugin_load zsh-history-substring-search
+_zplugin_load zsh-vi-mode
+_zplugin_load fast-syntax-highlighting

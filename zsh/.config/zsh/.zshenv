@@ -1,5 +1,3 @@
-# ---------- ZSH Directory ----------
-
 # ---------- XDG base directories ----------
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
@@ -36,17 +34,5 @@ fi
 # ---------- Starship ----------
 export STARSHIP_CONFIG="$ZDOTDIR/starship.toml"
 
-# ------------- Paths ---------
-typeset -U PATH path # Ensure no duplicates in PATH
-path=(
-  "$HOME/.local/bin"
-  "$HOME/.local/bin/Apps"
-  "$HOME/.cargo/bin"
-  "$HOME/go/bin"
-  "$HOME/.nimble/bin"
-  "$HOME/.local/share/grabnim/current/bin"
-  "$HOME/.opencode/bin"
-  "$HOME/.steel/bin"
-  $path
-)
-export PATH
+# ---------- Paths ----------
+source "$ZDOTDIR/path.zsh"

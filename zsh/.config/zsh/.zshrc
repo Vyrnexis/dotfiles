@@ -5,9 +5,10 @@ SAVEHIST=100000
 mkdir -p "${HISTFILE:h}" "$XDG_CACHE_HOME/zsh"
 
 setopt APPEND_HISTORY
-setopt SHARE_HISTORY
+setopt INC_APPEND_HISTORY_TIME
+setopt EXTENDED_HISTORY
+setopt HIST_FCNTL_LOCK
 setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_SPACE
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_FIND_NO_DUPS
 
@@ -17,10 +18,19 @@ setopt NOBEEP
 setopt NUMERIC_GLOB_SORT
 
 # -------------- Init Zoxide --------
-if command -v zoxide >/dev/null 2>&1 && [[ ! -s "$XDG_CACHE_HOME/zsh/zoxide.zsh" ]]; then
-  zoxide init zsh > "$XDG_CACHE_HOME/zsh/zoxide.zsh"
+if (( $+commands[zoxide] )); then
+  zoxide_cache="$XDG_CACHE_HOME/zsh/zoxide.zsh"
+  if [[ ! -s "$zoxide_cache" || "$commands[zoxide]" -nt "$zoxide_cache" ]]; then
+    zoxide_cache_temp="${zoxide_cache}.${ZSH_PID}"
+    if zoxide init zsh >| "$zoxide_cache_temp"; then
+      mv -f "$zoxide_cache_temp" "$zoxide_cache"
+    else
+      rm -f "$zoxide_cache_temp"
+    fi
+  fi
+  [[ -r "$zoxide_cache" ]] && source "$zoxide_cache"
+  unset zoxide_cache zoxide_cache_temp
 fi
-[[ -r "$XDG_CACHE_HOME/zsh/zoxide.zsh" ]] && source "$XDG_CACHE_HOME/zsh/zoxide.zsh"
 
 # ------------- Completion --------
 autoload -Uz compinit
@@ -34,9 +44,8 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
 # ------------- Fuzzy Finder -------
-if [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
-  source /usr/share/fzf/key-bindings.zsh
-  [[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
+if (( $+commands[fzf] )); then
+  source <(fzf --zsh)
 fi
 
 # ------- Fzf Config -------
@@ -54,8 +63,6 @@ source "$ZDOTDIR/plugins.zsh"
 # -------- Prompt / Theme -------
 source "$ZDOTDIR/prompt.zsh"
 
-
-if command -v nymph >/dev/null 2>&1; then
+if (( SHLVL == 1 )) && [[ -t 1 ]] && (( $+commands[nymph] )); then
   nymph
 fi
-

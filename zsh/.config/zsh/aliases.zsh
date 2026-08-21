@@ -13,14 +13,10 @@ alias tree='eza --tree --icons'
 # Reuse ls completions for eza (avoids defining a separate completion function)
 compdef eza=ls
 
-# Better cat
-alias cat='bat'
-
 # =========================================================
 # Core utilities
 # =========================================================
 
-alias grep='rg --color=auto'
 alias diff='diff --color=auto'
 alias df='df -h'
 
@@ -30,15 +26,11 @@ alias df='df -h'
 
 alias -- -='cd -'  # -- prevents - being parsed as a flag; cd - jumps to previous directory
 
-# Runs lf and changes the shell directory to its last visited directory.
-lf() {
-    tmp=$(mktemp)
-    command lf -last-dir-path="$tmp" "$@"
-    if [ -f "$tmp" ]; then
-        dir=$(cat "$tmp")
-        rm -f "$tmp"
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
-    fi
+# Runs Superfile and changes to its last visited directory on exit.
+sf() {
+  local last_dir
+  last_dir="$(command spf --print-last-dir "$@")"
+  [[ -d "$last_dir" && "$last_dir" != "$PWD" ]] && builtin cd -- "$last_dir"
 }
 
 # =========================================================
