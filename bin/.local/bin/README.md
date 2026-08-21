@@ -8,10 +8,14 @@ These scripts are automatically placed into `~/.local/bin/` so they are availabl
 
 ```
 bin/.local/bin/
-├── helix-cheatsheet.sh    # Quick reference for Helix editor keybindings
-├── kitty-cheatsheet.sh    # Quick reference for Kitty terminal shortcuts
-└── nvim-cheatsheet.sh     # Quick reference for Neovim mappings
+├── helix-cheatsheet    # Helix defaults and custom mappings
+├── kitty-cheatsheet    # Kitty defaults and configured features
+└── nvim-cheatsheet     # Neovim defaults and custom mappings
 ```
+
+Each command pages output only when connected to a terminal and emits plain
+text when redirected. Use `--plain` to disable colors, `--no-pager` to print
+directly, or `--help` to show usage.
 
 ## Installation
 

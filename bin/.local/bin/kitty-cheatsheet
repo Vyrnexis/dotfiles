@@ -1,0 +1,127 @@
+#!/usr/bin/env bash
+# Displays a concise Kitty reference matching the repository configuration.
+
+set -euo pipefail
+
+use_color=true
+use_pager=true
+
+# Prints command-line usage for the cheatsheet.
+usage() {
+  printf 'Usage: kitty-cheatsheet [--plain] [--no-pager]\n'
+}
+
+while (($# > 0)); do
+  case "$1" in
+    --plain)
+      use_color=false
+      ;;
+    --no-pager)
+      use_pager=false
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      printf 'kitty-cheatsheet: unknown option: %s\n' "$1" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+  shift
+done
+
+BOLD=""
+DIM=""
+RESET=""
+HEADING=""
+ACCENT=""
+
+if [[ "$use_color" == true && -t 1 && "${TERM:-dumb}" != dumb ]] \
+  && [[ -z "${NO_COLOR:-}" ]] && command -v tput >/dev/null 2>&1 \
+  && tput colors >/dev/null 2>&1; then
+  BOLD="$(tput bold)"
+  DIM="$(tput dim)"
+  RESET="$(tput sgr0)"
+  HEADING="$(tput setaf 6)"
+  ACCENT="$(tput setaf 2)"
+fi
+
+# Sends stdin through less on a terminal and directly to stdout otherwise.
+display() {
+  if [[ "$use_pager" == true && -t 1 ]] && command -v less >/dev/null 2>&1; then
+    LESS="${LESS:--FIX}" less -R
+  else
+    command cat
+  fi
+}
+
+display <<EOF
+${BOLD}${HEADING}KITTY 0.48 CONFIG CHEATSHEET${RESET}
+${DIM}kitty_mod is Ctrl+Shift. Search this page with /pattern.${RESET}
+
+${BOLD}${ACCENT}CLIPBOARD${RESET}
+  Ctrl-Shift-c       Copy selection
+  Ctrl-Shift-v       Paste clipboard
+  Ctrl-Shift-s       Paste primary selection
+  Shift-Insert       Paste primary selection
+
+${BOLD}${ACCENT}SCROLLBACK${RESET}
+  Ctrl-Shift-Up/Down Scroll one line
+  Ctrl-Shift-k/j     Scroll one line
+  Ctrl-Shift-PgUp    Scroll one page up
+  Ctrl-Shift-PgDn    Scroll one page down
+  Ctrl-Shift-Home    Jump to top
+  Ctrl-Shift-End     Jump to bottom
+  Ctrl-Shift-h       Open scrollback in pager
+  Ctrl-Shift-g       Show last command output
+  Ctrl-Shift-/       Search scrollback
+
+${BOLD}${ACCENT}WINDOWS${RESET}
+  Ctrl-Shift-Enter   New window in current tab
+  Ctrl-Shift-w       Close current window
+  Ctrl-Shift-] / [   Next / previous window
+  Ctrl-Shift-r       Enter window resize mode
+  Ctrl-Shift-1..0    Focus window by number
+  Ctrl-Shift-f / b   Move window forward / backward
+  Ctrl-Shift-l       Cycle layout
+
+${BOLD}${ACCENT}TABS AND OS WINDOWS${RESET}
+  Ctrl-Shift-t       New tab
+  Ctrl-Shift-q       Close current tab
+  Ctrl-Shift-Right   Next tab
+  Ctrl-Shift-Left    Previous tab
+  Ctrl-Shift-. / ,   Move tab forward / backward
+  Ctrl-Shift-Alt-t   Rename tab
+  Ctrl-Shift-n       New top-level OS window
+
+${BOLD}${ACCENT}FONT SIZE${RESET}
+  Ctrl-Shift-= / +   Increase font size
+  Ctrl-Shift--       Decrease font size
+  Ctrl-Shift-Bksp    Reset font size
+
+${BOLD}${ACCENT}HINTS AND KITTENS${RESET}
+  Ctrl-Shift-e       Open a visible URL with hints
+  Ctrl-Shift-u       Unicode input kitten
+  Ctrl-Shift-p f     Insert selected path
+  Ctrl-Shift-p F     Open selected path
+  kitten icat        Display images in the terminal
+  kitten diff        View a side-by-side diff
+  kitten ssh         Open an enhanced SSH session
+  kitten themes      Select and apply a theme
+
+${BOLD}${ACCENT}CONFIGURATION${RESET}
+  Ctrl-Shift-F2      Edit kitty.conf
+  Ctrl-Shift-F5      Reload kitty.conf
+  kitty +edit-config Open the config editor from a shell
+  kitty --session    Restore a startup session
+
+${BOLD}${ACCENT}REMOTE CONTROL${RESET}
+  kitten @ ls                         List tabs and windows from Kitty
+  kitten @ focus-tab --match recent:1 Focus the previously active tab
+  kitten @ close-window               Close the active window
+  kitten @ send-text 'ls -la\n'       Send text to the active window
+
+${DIM}Outside Kitty, add: --to unix:@mykitty${RESET}
+EOF

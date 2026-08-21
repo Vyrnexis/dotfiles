@@ -1,0 +1,147 @@
+#!/usr/bin/env bash
+# Displays a concise Helix reference matching the repository configuration.
+
+set -euo pipefail
+
+use_color=true
+use_pager=true
+
+# Prints command-line usage for the cheatsheet.
+usage() {
+  printf 'Usage: helix-cheatsheet [--plain] [--no-pager]\n'
+}
+
+while (($# > 0)); do
+  case "$1" in
+    --plain)
+      use_color=false
+      ;;
+    --no-pager)
+      use_pager=false
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      printf 'helix-cheatsheet: unknown option: %s\n' "$1" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+  shift
+done
+
+BOLD=""
+DIM=""
+RESET=""
+HEADING=""
+ACCENT=""
+
+if [[ "$use_color" == true && -t 1 && "${TERM:-dumb}" != dumb ]] \
+  && [[ -z "${NO_COLOR:-}" ]] && command -v tput >/dev/null 2>&1 \
+  && tput colors >/dev/null 2>&1; then
+  BOLD="$(tput bold)"
+  DIM="$(tput dim)"
+  RESET="$(tput sgr0)"
+  HEADING="$(tput setaf 6)"
+  ACCENT="$(tput setaf 2)"
+fi
+
+# Sends stdin through less on a terminal and directly to stdout otherwise.
+display() {
+  if [[ "$use_pager" == true && -t 1 ]] && command -v less >/dev/null 2>&1; then
+    LESS="${LESS:--FIX}" less -R
+  else
+    command cat
+  fi
+}
+
+display <<EOF
+${BOLD}${HEADING}HELIX 25.07 CONFIG CHEATSHEET${RESET}
+${DIM}Search this page with /pattern, then use n and N.${RESET}
+
+${BOLD}${ACCENT}CUSTOM MAPPINGS${RESET}
+  Ctrl-s          Save in normal or insert mode
+  Ctrl-q          Quit current view
+  Ctrl-h / Ctrl-l Previous / next buffer
+  Ctrl-e          Pick a file with Superfile
+  Ctrl-g          Open Lazygit
+  Space e         File explorer at workspace root
+  Space E         File explorer at current buffer directory
+  X               Extend selection to the line above
+  Esc             Collapse to the primary selection
+
+${BOLD}${ACCENT}MODES AND MOVEMENT${RESET}
+  Esc             Return to normal mode
+  i / a           Insert before / after selection
+  v               Enter select mode
+  h j k l         Move left, down, up, right
+  w / b / e       Next word, previous word, word end
+  gg / G          Start / end of file
+  0 / \$           Start / end of line
+  Ctrl-u / Ctrl-d Half-page up / down
+  Ctrl-b / Ctrl-f Page up / down
+  f<char>         Find next character
+  t<char>         Move until next character
+  Alt-.           Repeat the last f, t, m, [, or ] motion
+  %               Go to matching bracket
+
+${BOLD}${ACCENT}EDITING${RESET}
+  i a I A         Insert or append at selection or line boundary
+  o / O           Open a line below / above
+  d / c           Delete / change selection
+  y / p / P       Yank / paste after / paste before
+  u / U           Undo / redo
+  > / <           Indent / unindent selection
+  =               Format selection with LSP
+  :format         Format the whole buffer
+  Ctrl-c          Toggle comments
+  J               Join selected lines
+
+${BOLD}${ACCENT}SELECTIONS AND SEARCH${RESET}
+  x               Select or extend to the next line
+  s               Select regex matches inside selections
+  S               Split selections on regex matches
+  Alt-s           Split selections on newlines
+  C / Alt-C       Add a selection below / above
+  ; / ,           Collapse selection / keep primary selection
+  / / ?           Search forward / backward
+  n / N           Select next / previous search match
+  * / #           Search selected word forward / backward
+  m s <char>      Surround selection
+  m r <old><new>  Replace surrounding character
+  m d <char>      Delete surrounding character
+  m i <object>    Select inside a text object
+  m a <object>    Select around a text object
+
+${BOLD}${ACCENT}FILES, BUFFERS, AND WINDOWS${RESET}
+  Space f / F     File picker at workspace / current directory
+  Space b         Buffer picker
+  :open <path>    Open a file
+  :bn / :bp       Next / previous buffer
+  Ctrl-w v / s    Vertical / horizontal split
+  Ctrl-w h/j/k/l  Focus neighboring split
+  Ctrl-w q        Close current split
+
+${BOLD}${ACCENT}LSP AND DIAGNOSTICS${RESET}
+  Space k         Hover documentation
+  g d / g r       Definition / references
+  g i / g y       Implementation / type definition
+  Space r / a     Rename / code action
+  Space d / D     Document / workspace diagnostics
+  ]d / [d         Next / previous diagnostic
+
+${BOLD}${ACCENT}VERSION CONTROL${RESET}
+  ]g / [g         Next / previous change
+  Ctrl-g          Open Lazygit through the custom integration
+
+${BOLD}${ACCENT}COMMANDS${RESET}
+  :w / :q / :wq  Write / quit / write and quit
+  :q!             Force quit current view
+  :theme <name>   Change theme
+  :config-open    Edit config.toml
+  :config-reload  Reload configuration
+  :tutor          Open the built-in tutorial
+  Space ?         Open the command palette
+EOF

@@ -1,0 +1,140 @@
+#!/usr/bin/env bash
+# Displays a concise Neovim reference matching the repository configuration.
+
+set -euo pipefail
+
+use_color=true
+use_pager=true
+
+# Prints command-line usage for the cheatsheet.
+usage() {
+  printf 'Usage: nvim-cheatsheet [--plain] [--no-pager]\n'
+}
+
+while (($# > 0)); do
+  case "$1" in
+    --plain)
+      use_color=false
+      ;;
+    --no-pager)
+      use_pager=false
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      printf 'nvim-cheatsheet: unknown option: %s\n' "$1" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+  shift
+done
+
+BOLD=""
+DIM=""
+RESET=""
+HEADING=""
+ACCENT=""
+
+if [[ "$use_color" == true && -t 1 && "${TERM:-dumb}" != dumb ]] \
+  && [[ -z "${NO_COLOR:-}" ]] && command -v tput >/dev/null 2>&1 \
+  && tput colors >/dev/null 2>&1; then
+  BOLD="$(tput bold)"
+  DIM="$(tput dim)"
+  RESET="$(tput sgr0)"
+  HEADING="$(tput setaf 6)"
+  ACCENT="$(tput setaf 2)"
+fi
+
+# Sends stdin through less on a terminal and directly to stdout otherwise.
+display() {
+  if [[ "$use_pager" == true && -t 1 ]] && command -v less >/dev/null 2>&1; then
+    LESS="${LESS:--FIX}" less -R
+  else
+    command cat
+  fi
+}
+
+display <<EOF
+${BOLD}${HEADING}NEOVIM 0.12 CONFIG CHEATSHEET${RESET}
+${DIM}Leader is Space. Search this page with /pattern, then use n and N.${RESET}
+
+${BOLD}${ACCENT}CUSTOM MAPPINGS${RESET}
+  Space w          Save file
+  Space q          Quit Neovim
+  Space e          Toggle Netrw explorer
+  Space f          Open fuzzy file search prompt
+  Space g          Search project text with ripgrep
+  Space d          Open diagnostics in the quickfix list
+  Ctrl-h/j/k/l     Focus left/down/up/right split
+  U                Redo
+
+${BOLD}${ACCENT}MODES AND MOVEMENT${RESET}
+  Esc              Return to normal mode
+  i / a            Insert before / after cursor
+  o / O            Open line below / above
+  v / V / Ctrl-v   Character / line / block visual mode
+  h j k l          Move left, down, up, right
+  w / b / e        Next word, previous word, word end
+  gg / G           Start / end of file
+  0 / ^ / \$        Column zero / first text / end of line
+  Ctrl-f / Ctrl-b  Page down / up
+  Ctrl-d / Ctrl-u  Half-page down / up
+  %                Go to matching bracket
+
+${BOLD}${ACCENT}EDITING${RESET}
+  u / U            Undo / redo with custom mapping
+  Ctrl-r           Native redo mapping
+  y / yy           Yank selection / line
+  p / P            Paste after / before
+  d / dd           Delete selection / line
+  c / cc           Change selection / line
+  x                Delete character
+  .                Repeat last change
+  > / <            Indent / unindent
+  gcc              Toggle line comment
+
+${BOLD}${ACCENT}SEARCH AND REPLACE${RESET}
+  / / ?            Search forward / backward
+  n / N            Next / previous result
+  * / #            Search word forward / backward
+  :s/old/new/g     Replace on current line
+  :%s/old/new/gc   Replace globally with confirmation
+  :nohlsearch      Clear search highlighting
+
+${BOLD}${ACCENT}WINDOWS AND BUFFERS${RESET}
+  Ctrl-w s / v     Horizontal / vertical split
+  Ctrl-w q         Close current split
+  Ctrl-w =         Equalize split sizes
+  :bnext / :bprev  Next / previous buffer
+  :buffers         List buffers
+  :bdelete         Delete current buffer
+
+${BOLD}${ACCENT}NETRW EXPLORER${RESET}
+  Enter            Open file or directory
+  -                Go to parent directory
+  %                Create file, or directory when name ends in /
+  d                Create directory
+  R                Rename file or directory
+  D                Delete file or directory
+  qf               Show file information
+
+${BOLD}${ACCENT}LSP DEFAULTS${RESET}
+  K                Hover documentation
+  Ctrl-]           Go to definition
+  grr              References
+  gri              Implementation
+  grn              Rename symbol
+  gra              Code action
+  gO               Document symbols
+  Ctrl-s           Signature help in insert mode
+  [d / ]d          Previous / next diagnostic
+
+${BOLD}${ACCENT}CONFIGURED TOOLING${RESET}
+  Format on save   Lua, Python, JSON, TOML, Markdown, or LSP fallback
+  :checkhealth     Run Neovim health checks
+  :checkhealth vim.lsp  Check LSP configuration
+  :InspectTree     Open the Treesitter syntax tree
+EOF
